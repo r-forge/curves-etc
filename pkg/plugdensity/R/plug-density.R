@@ -31,7 +31,7 @@ plugin.density <- function(x, nout = 201, xout = NULL, na.rm = FALSE)
 	m <- length(xout)
 	if(is.unsorted(xout)) xout <- sort(xout)
     }
-    r <- .C(plugin,
+    r <- .C(plugin_dens,
 	    x = as.double(x), n=n,
 	    z = xout, m=m,
 	    f = double(m),

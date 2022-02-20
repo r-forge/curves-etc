@@ -42,6 +42,9 @@ plugin.density(x, nout = 201, xout = NULL, na.rm = FALSE)
   their derivatives.
   \emph{Journal of Nonparametric Statistics} \bold{4}, 21--34.
 }
+\source{
+  Original code, no longer available, from \file{http://www.unizh.ch/biostat/Software/} .
+}
 \author{Algorithm and C code: Eva Herrmann
   \email{eherrmann@mathematik.tu-darmstadt.de};  R interface:
   Martin Maechler \email{maechler@R-project.org}.
