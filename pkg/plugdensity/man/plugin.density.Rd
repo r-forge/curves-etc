@@ -1,13 +1,18 @@
 \name{plugin.density}
+\title{Kernel Density Estimation by Plug-In Bandwidth Selection}
 \alias{plugin.density}
 \alias{print.densityEHpi}
-\title{Kernel Density Estimation by Plug-In Bandwidth Selection}
+\alias{bw.EH}
 \description{
-  The function provides kernel density estimation with iterative plug-in
-  bandwidth selection.
+  The function \code{plugin.density()} provides kernel density estimation
+  with iterative plug-in bandwidth selection.
+
+  \code{bw.EH()} computes the bandwidth (smoothing parameter) which
+  \code{plugin.density()} also uses.
 }
 \usage{
 plugin.density(x, nout = 201, xout = NULL, na.rm = FALSE)
+bw.EH(x)
 }
 \arguments{
   \item{x}{vector of numbser whose density is to be estimated.}
@@ -23,9 +28,12 @@ plugin.density(x, nout = 201, xout = NULL, na.rm = FALSE)
 % ...
 %}
 \value{
-  an object of class \code{"densityEHpi"} inheriting also from class
-  \code{"\link{density}"}.
-  It is a list with components
+  \code{bw.EH()} returns the bandwidth \eqn{h} computed by Eva Herrmann's
+  plugin bandwith selector.
+
+  \code{plugin.density()} returns an object of class \code{"densityEHpi"}
+  inheriting also from class \code{"\link{density}"}.
+  It is a \code{\link{list}} with components
   \item{x}{the \code{n} coordinates of the points where the density is
     estimated.}
   \item{y}{the estimated density values.}
@@ -65,6 +73,8 @@ str(d.co2 <- density(co2, n = length(xo), from=xo[1],to=max(xo),
 nms <- c("x","y", "bw", "n")
 all.equal(d.co2[nms], pdco2[nms])
 ## are close: "Component 2 (= 'y'): Mean relative difference: 0.0009..."
+## be.EH() directly computes the bandwidth only:
+stopifnot(all.equal(bw.EH(co2), pdco2$bw, tol = 3e-16))
 }
 \keyword{distribution}
 \keyword{smooth}

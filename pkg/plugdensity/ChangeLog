@@ -1,3 +1,8 @@
+2022-02-21  Martin Maechler  <maechler@stat.math.ethz.ch>
+
+	* DESCRIPTION (Version): 0.8-4; -> CRAN
+	* R/plug-density.R (bw.EH): new, direct computation of bandwidth
+
 2011-11-30  Martin Maechler  <maechler@stat.math.ethz.ch>
 
 	* DESCRIPTION (Version): 0.8-3; -> CRAN

@@ -2,6 +2,6 @@ useDynLib(plugdensity, .registration=TRUE)
 
 importFrom(utils, str)
 
-export(plugin.density)
+export(bw.EH, plugin.density)
 
 S3method(print, densityEHpi)

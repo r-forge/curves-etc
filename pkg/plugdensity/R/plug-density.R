@@ -50,3 +50,5 @@ print.densityEHpi <- function(x, digits = getOption("digits"), ...)
     str(x[1:2], digits = digits, ...)
     invisible(x)
 }
+
+bw.EH <- function(x) .Call(h_pluginEH, x)

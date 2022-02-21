@@ -1,6 +1,5 @@
-RATHER than publishing this package :
 
-1) Change this to only estimate the bandwidth !
-	          ----              ~~~~~~~~~
+DONE: 1) Change this to only estimate the bandwidth: new direct  bw.EH() function
+
 2) even incorporate that bw estimate into base R
 
