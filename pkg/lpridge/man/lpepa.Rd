@@ -29,7 +29,7 @@ lpepa(x, y, bandwidth, deriv = 0, n.out = 200, x.out = NULL,
   \item{mnew}{integer forcing to restart the algorithm after \code{mnew}
     updating steps.
     The default is \code{mnew = 100}.  For \code{mnew = 1} you get a numerically
-    \dQuote{super-stable} algorithm (see reference SBE\&G below).}
+    \dQuote{super-stable} algorithm (see reference SBE&G below).}
   \item{var}{logical flag: if \code{TRUE}, the variance of the estimator
     proportional to the residual variance is computed (see details).}
 }
@@ -48,13 +48,13 @@ lpepa(x, y, bandwidth, deriv = 0, n.out = 200, x.out = NULL,
   \item{est.var}{estimator of the variance of est (proportional to
     residual variance).}
 }
-\details{More details are described in the first reference SBE\&G (1994)
-  below.  In S\&G, a bad finite sample behaviour of local polynomials
+\details{More details are described in the first reference SBE&G (1994)
+  below.  In S&G, a bad finite sample behaviour of local polynomials
   for random designs was found.
   For practical use, we therefore propose local polynomial regression
   fitting with ridging, as implemented in the function
   \code{\link{lpridge}}.  In \code{lpepa}, several parameters described
-  in SBE\&G are fixed either in the fortran
+  in SBE&G are fixed either in the fortran
   routine or in the \R-function.  There, you find comments how to change them.
 
   %% MM: FIXME -- make this more transparent and user configurable
@@ -64,8 +64,10 @@ lpepa(x, y, bandwidth, deriv = 0, n.out = 200, x.out = NULL,
   regression estimator is \code{var(est) = est.var * sigma^2}.
 }
 \references{
-  See also \url{http://www.unizh.ch/biostat/} under
-  \file{Manuscripts} etc.
+  Originally available from \href{https://www.ebpi.uzh.ch/}{%
+    Biostats, University of Zurich} under \file{Manuscripts}, but no longer.
+  %% \url{http://www.biostat.uzh.ch/en/research/software/kernel.html}
+  %% \url{http://www.unizh.ch/biostat/}
 
   - Numerical stability and computational speed:
   \cr
@@ -87,7 +89,7 @@ lpepa(x, y, bandwidth, deriv = 0, n.out = 200, x.out = NULL,
   Seifert, B. and Gasser, T. (1998)
   Ridging Methods in Local Polynomial Regression.
   in: S. Weisberg (ed), \emph{Dimension Reduction, Computational Complexity,
-  and Information}, Vol.\bold{30} of Computing Science \& Statistics,
+  and Information}, Vol.\bold{30} of Computing Science & Statistics,
   Interface Foundation of North America, 467--476.
 
   Seifert, B. and Gasser, T. (1998)

@@ -1,3 +1,19 @@
+2022-05-31  Martin Maechler  <maechler@stat.math.ethz.ch>
+
+	* DESCRIPTION (Version): 1.0-9
+	* man/*.Rd: no longer escape by `\`  ((needed a long time ago; "wrong" nowadays))
+
+2018-06-11  Martin Maechler  <maechler@stat.math.ethz.ch>
+
+	* DESCRIPTION (Version): 1.0-8
+	* README.md: new (from former README, README.{lpepa,lpridge})
+	* Orig/: archive (not in tarball)
+	* lpridge/src/*.f: modernize fortran: get rid of "arithmetic if()", avoid gcc8 warnings...
+
+2018-05-18  Martin Maechler  <maechler@stat.math.ethz.ch>
+
+	* NAMESPACE, src/init.c: use .registration=TRUE, etc
+
 2013-04-17  Martin Maechler  <maechler@stat.math.ethz.ch>
 
 	* DESCRIPTION (Version): 1.0-7

@@ -31,7 +31,7 @@ lpridge(x, y, bandwidth, deriv=0, n.out=200, x.out=NULL,
     is equivalent to weight = c(1,0,-1).}
   \item{mnew}{force to restart the algorithm after mnew updating
     steps.  The default value is mnew = 100.  For \code{mnew = 1} you get a
-    numerically "super-stable" algorithm (see refernce SBE\\&G below).}
+    numerically "super-stable" algorithm (see reference SBE&G below).}
   \item{var}{logical flag: if TRUE, the variance of the estimator
     proportional to the residual variance is computed (see "Details" below).}
 }
@@ -58,11 +58,11 @@ lpridge(x, y, bandwidth, deriv=0, n.out=200, x.out=NULL,
   functions and their derivatives via local polynomials and local
   polynomial ridge regression with polynomial weight functions.
 }
-\details{described in the reference SBE\&G below.  Several parameters
+\details{described in the reference SBE&G below.  Several parameters
   described there are fixed either in the fortran routine or in the
   \R-function.  There, you find comments how to change them.
 
-  In S\&G, a bad finite sample behavior of local polynomials for random
+  In S&G, a bad finite sample behavior of local polynomials for random
   design was found, and ridging of the estimator was proposed.  In
   \code{lpridge()}, we use a ridging matrix corresponding to the smoothness
   assumption \emph{``The squared difference of the derivative of order
