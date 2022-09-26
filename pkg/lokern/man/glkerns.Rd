@@ -171,8 +171,15 @@ glkerns(x, \dots)
   %was http://www.biostat.uzh.ch/research/software/kernel.html
   %was http://www.unizh.ch/biostat/Software/kernsplus.html}.
 }
-\author{
-  The formula method was added after proposals by Andri Signorell.
+\author{% see ../ChangeLog, svn log and old files in R/, src/
+ - Eva Herrmann, TU Darmstadt(1995-1997): principal code (origianl Fortran and S+),
+  see the references.
+  \cr
+ - Martin Maechler, 2001 ff: translated to R, created the package, refactored
+  \file{src/}, added class, methods (predict, plot ..), arguments, docu,
+  tweaks, help, examples, etc.
+  \cr
+ - The \code{formula} method was added in 2014 after proposals by Andri Signorell.
 }
 \references{
   - global plug-in bandwidth estimator:\cr
@@ -199,7 +206,7 @@ glkerns(x, \dots)
 
   - fast algorithm for kernel regression estimator:\cr
   T. Gasser & A. Kneip (1989)
-  discussion of Buja, A., Hastie, TRUE. and Tibshirani, R.: Linear smoothers
+  discussion of Buja, A., Hastie, T. and Tibshirani, R.: Linear smoothers
   and additive models, \emph{The Annals of Statistics} \bold{17}, 532--535.
 
   B. Seifert, M. Brockmann, J. Engel & T. Gasser (1994)
@@ -216,7 +223,7 @@ glkerns(x, \dots)
   %% \url{http://wwwbib.mathematik.tu-darmstadt.de/Math-Net/Preprints/Listen/shadow/pp1833.html})
 }
 \seealso{\code{\link{lokerns}} for \bold{lo}cal bandwidth computation.
-  \code{\link{plot.KernS}} documents all the methods for \code{"KernS"}
+  \code{\link{plot.KernS}} documents all the \code{\link{methods}} for \code{"KernS"}
   classed objects.
 
   The \code{\link{demo}} for computing derivatives, \code{demo("glk-derivs")}.
