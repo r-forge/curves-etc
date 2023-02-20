@@ -1,3 +1,10 @@
+2023-02-20  Martin Maechler  <maechler@lynne>
+
+	* DESCRIPTION (Date): updated, Version: 1.1-10 - ready for release
+
+	* R/lokerns.R (etc): change default of `inputb` argument to use
+	  `all(bandwith > 0)' instead of `bandwidth > 0`.
+
 2021-04-09  Martin Maechler  <maechler@stat.math.ethz.ch>
 
 	* R/glkerns.R (asIntLogic): wrapper to ensure passing *integer* in .Fortran()

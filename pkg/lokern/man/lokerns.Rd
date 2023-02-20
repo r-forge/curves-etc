@@ -14,7 +14,7 @@ lokerns(x, \dots)
 
 \method{lokerns}{default}(x, y=NULL, deriv = 0, n.out=300, x.out=NULL, x.inOut = TRUE,
         korder = deriv + 2, hetero=FALSE, is.rand=TRUE,
-        inputb= is.numeric(bandwidth) && bandwidth > 0,
+        inputb = is.numeric(bandwidth) && all(bandwidth > 0),
         m1 = 400, xl=NULL, xu=NULL,
         s=NULL, sig=NULL, bandwidth=NULL, trace.lev = 0, \dots)
 
@@ -203,5 +203,14 @@ lines(lofit, col=4, lwd=2)
 mtext(paste("bandwidth in [",
             paste(format(sb[c(1,6)], dig = 3),collapse=","),
             "];  Median b.w.=",formatC(sb["Median"])))
+
+## using user-specified bandwidth array
+myBW <- round(2*lofit$bandwidth, 2)
+(lofB <- lokerns(dist ~ speed, data=cars, bandwidth = myBW)) # failed (for a while)
+## can use deriv=3 (and 4) here:
+lofB3 <- lokerns(dist ~ speed, data=cars, bandwidth = myBW, deriv=3)
+plot(lofB)
+lines(lofB3, col=3)
+stopifnot(inherits(lofB3, "KernS"), identical(lofB3$korder, 5L))
 }
 \keyword{smooth}

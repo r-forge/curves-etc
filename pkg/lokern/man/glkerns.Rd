@@ -14,7 +14,7 @@ glkerns(x, \dots)
 
 \method{glkerns}{default}(x, y=NULL, deriv = 0, n.out = 300, x.out=NULL, x.inOut = TRUE,
         korder= deriv + 2, hetero=FALSE, is.rand=TRUE,
-        inputb= is.numeric(bandwidth) && bandwidth > 0,
+        inputb = is.numeric(bandwidth) && all(bandwidth > 0),
         m1 = 400, xl=NULL, xu=NULL,
         s=NULL, sig=NULL, bandwidth=NULL, trace.lev = 0, \dots)
 
