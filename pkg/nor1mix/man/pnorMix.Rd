@@ -77,7 +77,7 @@ qnorMix(p, obj, lower.tail = TRUE, log.p = FALSE,
 MW.nm3 # the "strange skew" one
 plot(MW.nm3)
 ## now the cumlative :
-x <- seq(-4,4, length=1001)
+x <- seq(-4,4, length.out = 1001)
 plot(x, pnorMix(x, MW.nm3), type="l", col=2)
 ## and some of its inverse :
 pp <- seq(.1, .9, by=.1)

@@ -147,7 +147,7 @@ par2norMix(pp)
 ## really the same as the initial 'obj' above
 
 ## Log likelihood (of very artificial data):
-llnorMix(pp, x = seq(-2, 2, length=1000))
+llnorMix(pp, x = seq.int(-2, 2, length.out = 1000))
 set.seed(47)## of more realistic data:
 x <- rnorMix(1000, obj)
 llnorMix(pp, x)

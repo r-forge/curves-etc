@@ -48,7 +48,7 @@ dpnorMix(x, obj, lower.tail = TRUE)
  str(ff)
  plot(ff, type = "h", ylim = c(0,1)) # rather use plot(ff, ...)
 
- x <- seq(-4,5, length=501)
+ x <- seq.int(-4,5, length.out = 501)
  dp <- dpnorMix(x, MW.nm7)
  lines(x, dp$d, col = "tomato", lwd=3)
  lines(x, dp$p, col = 3, lwd=2)# does not fit y-wise

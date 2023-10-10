@@ -1,5 +1,5 @@
 ##
-##  Copyright (C) 1997-2020 Martin Maechler
+##  Copyright (C) 1997-2023 Martin Maechler
 ##
 ##  This program is free software; you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -207,7 +207,7 @@ dnorMixL <- function(obj, x = NULL, log = FALSE, xlim = NULL, n = 511)
   if(is.null(x)) {
     if(is.null(xlim)) ##-- construct "reasonable" abscissa values
       xlim <- mean.norMix(obj) + c(-3,3)*sqrt(var.norMix(obj))
-    x <- seq(xlim[1], xlim[2], length = n)
+    x <- seq.int(xlim[1], xlim[2], length.out = n)
   }
   list(x = x, y = dnorMix(x, obj, log=log))
 }
@@ -225,7 +225,7 @@ rnorMix <- function(n, obj)
 	rnorm(1, mean = mu[j], sd = sd[j])
     } else {
 	nj <- as.vector(rmultinom(n=1, size = n, prob = obj[,"w"]))
-	sample(unlist(lapply(seq(along=nj), function(j)
+	sample(unlist(lapply(seq_along(nj), function(j)
 			     rnorm(nj[j], mean = mu[j], sd = sd[j]))))
     }
 }
@@ -286,12 +286,13 @@ dpnorMix <- function(x, obj, lower.tail = TRUE)
 ##' @title Sub Sequence, regularly from 1:m
 ##' @param m integer >= 0 (typically >= M)
 ##' @param M integer >= 2
-##' @return a sub-sequence of  1:m   of length <= M
+##' @return an approximately arithmetic sub-sequence of  1:m   of length <= M
 ##' @author Martin Maechler
 sub_seq <- function(m, M) {
-    stopifnot((M1 <- as.integer(M-1)) >= 1L, length(m) == 1L)
-    if(m <= 2) return(seq_len(m))
-    pmax(1, pmin(m, unique(ceiling((m*floor(seq_len(m)*M1/m))/M1))))
+    stopifnot((M1 <- as.integer(M-1L)) >= 1L, length(m <- as.integer(m)) == 1L)
+    if(m <= 2) seq_len(m)
+    else pmax(1L, pmin(m, unique(as.integer(
+                             ceiling((m*floor(seq_len(m)*M1/m))/M1)))))
 }
 
 qnorMix <-
@@ -360,10 +361,10 @@ qnorMix <-
       missMeth <- missing(method)
       method <- {
           if(np <= 2) "eachRoot" ## in any case
-          else if(missMeth && m >= 100) "root2" else match.arg(method) }
-
+          else if(missMeth && m >= 100) "root2" else match.arg(method)
+      }
       if(method == "eachRoot") { ## root finding from left to right ...
-	  for(i in seq(along=pp)) {
+	  for(i in seq_along(pp)) {
 	      ff <- f.make(pp[i])
 	      rq <- outRange(pp[i])
 	      ## since pp[] is increasing, we can start from last 'root':
@@ -392,7 +393,9 @@ qnorMix <-
               stopifnot(l.interp >= 1, n.mu.interp > 1)
               ## large m (== length(mu)) would give large k,  and below,
               ## pnorMix() uses outer() --> a matrix of size  m * k * l.interp
-              k <- length(qs <- c(rXtr[1], mu.[sub_seq(length(mu.), M = n.mu.interp)], rXtr[2]))
+              k <- length(qs <- c(rXtr[1L],
+                                  mu.[sub_seq(length(mu.), n.mu.interp)],
+                                  rXtr[2L]))
               qs. <- qs[-k]
               dq <- qs[-1] - qs.    # == delta(qs)
               qi <- c(t(dq %*% t(seq_len(l.interp)/l.interp) + qs.))
@@ -403,11 +406,8 @@ qnorMix <-
               ## qnorMix() has practically a discontinuity there.
               ## In that case, splinefun() completely "fails";
               ## we do need  *monotone* (spline) interpolation:
-              mySfun <- {
-                  ## if(getRversion() < "2.8.0") monoHsplinefun
-                  ## else
-		      function(x, y, ...) splinefun(x,y, ..., method="monoH.FC")
-              }
+              mySfun <- function(x, y) # {specifying 'ties' also avoids warning}
+                  splinefun(x,y, ties=mean.default, method="monoH.FC")
               if(method == "interpspline")
                   qpp <- mySfun(ppi, qi)(pp.) ## is very fast
               else { ## "interpQspline"
@@ -509,7 +509,7 @@ plot.norMix <-
     ## -------------------------------------------------------------------------
     ## Author: Martin Maechler, Date: 20 Mar 1997
     if(!is.null(xlim) && is.null(xout)) ## determine xout
-	xout <- seq(xlim[1], xlim[2], length = n)
+	xout <- seq.int(xlim[1], xlim[2], length.out = n)
     d.o <- dnorMixL(x, x = xout, n = n)
     if(p.norm)
 	dn <- dnorm(d.o$x, mean = mean.norMix(x), sd = sqrt(var.norMix(x)))

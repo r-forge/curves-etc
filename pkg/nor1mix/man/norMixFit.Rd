@@ -64,7 +64,13 @@ norMixMLE(x, m, name = NULL, %% sd.min = 1e-7 * diff(range(x))/m,
   MLE: M.Maechler
 }
 \examples{
-ex <- norMix(mu = c(-1,2,5), sig2 = c(1, 0.5, 3))
+## use (mu, sigma)
+ex  <- norMix(mu = c(-1,2,5), sigma = c(1, 1/sqrt(2), sqrt(3)))
+tools::assertWarning(verbose=TRUE,
+           ## *deprecated* (using 'sig2' will *NOT* work in future!)
+           ex. <- norMix(mu = c(-1,2,5), sig2 = c(1, 0.5, 3))
+       )
+stopifnot(all.equal(ex, ex.))
 plot(ex, col="gray", p.norm=FALSE)
 
 x <- rnorMix(100, ex)

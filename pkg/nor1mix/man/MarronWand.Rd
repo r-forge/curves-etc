@@ -73,8 +73,8 @@ MW.nm10
 plot(MW.nm14)
 
 ## These are defined as norMix() calls in  ../R/zMarrWand-dens.R
-nms <- ls(pat="^MW.nm", "package:nor1mix")
-nms <- nms[order(as.numeric(substring(nms,6)))]
+nms <- ls(pattern = "^MW.nm", "package:nor1mix")
+nms <- nms[order(as.numeric(substring(nms,6)))] # w/ warning for "2.old"
 for(n in nms) {
    cat("\n",n,":\n"); print(get(n, "package:nor1mix"))
 }
@@ -87,7 +87,7 @@ mtext("The Marron-Wand Densities", outer= TRUE, font= 2, cex= 1.6)
 
 ## and their Q-Q-plots (not really fast):
 prob <- ppoints(N <- 100)
-for(n in nms[-17])
+for(n in nms[-17]) # qnorMix() using monotone spline inversion ==> warning
    qqnorm(qnorMix(prob, get(n, "package:nor1mix")), main = n)
 mtext("QQ-plots of Marron-Wand Densities", outer = TRUE,
       font = 2, cex = 1.6)
@@ -97,8 +97,8 @@ par(op)
 cbind(sapply(nms, function(n) { o <- get(n)
       sprintf("\%-18s: K =\%2d; rng = [\%3.1f, \%2.1f]",
               attr(o, "name"), nrow(o),
-              min(o[,"mu"] - 3*sqrt(o[,"sig2"])),
-              max(o[,"mu"] + 3*sqrt(o[,"sig2"])) )
+              min(o[,"mu"] - 3*o[,"sigma"]),
+              max(o[,"mu"] + 3*o[,"sigma"]) )
              }))
 
 

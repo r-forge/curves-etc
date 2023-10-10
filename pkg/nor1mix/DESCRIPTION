@@ -1,7 +1,7 @@
 Package: nor1mix
 Title: Normal aka Gaussian 1-d Mixture Models
-Version: 1.3-1
-Date: 2020-02-12
+Version: 1.3-2
+Date: 2023-10-10
 Authors@R: c(person("Martin", "Maechler", role = c("aut","cre"),
                     email = "maechler@stat.math.ethz.ch",
 	            comment = c(ORCID = "0000-0002-8685-9910"))
@@ -16,7 +16,7 @@ Description: Onedimensional Normal (i.e. Gaussian) Mixture Models (S3) Classes,
    Likelihood) or traditional EM estimation.
 Imports: stats, graphics
 Suggests: cluster
-URL: http://curves-etc.r-forge.r-project.org/,
+URL: https://curves-etc.r-forge.r-project.org/,
      svn://svn.r-forge.r-project.org/svnroot/curves-etc/pkg/nor1mix
 License: GPL (>= 2)
 Encoding: UTF-8
