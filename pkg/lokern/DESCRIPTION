@@ -9,4 +9,9 @@ Imports: grDevices, graphics, stats, utils, sfsmisc (>= 1.0-12)
 Description: Kernel regression smoothing with adaptive local or global plug-in
 	     bandwidth selection.
 BuildResaveData: no
+URL: https://curves-etc.r-forge.r-project.org/,
+     https://r-forge.r-project.org/R/?group_id=846,
+     https://r-forge.r-project.org/scm/viewvc.php/pkg/lokern/?root=curves-etc,
+     svn://svn.r-forge.r-project.org/svnroot/curves-etc/pkg/lokern
+BugReports: https://r-forge.r-project.org/R/?group_id=846
 License: GPL (>= 2)

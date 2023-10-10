@@ -1,13 +1,19 @@
 Package: cobs99
-Version: 0.9-12
-Date: 2013-06-12
-Title: Constrained B-splines -- outdated 1999 version
+Version: 0.9-13
+Date: 2023-10-10
+Title: Constrained B-Splines -- Outdated 1999 Version
 Author: Pin T. Ng <Pin.Ng@nau.edu> and Xuming He, U. Illinois;
 	R port by Martin Maechler
 Maintainer: Martin Maechler <maechler@stat.math.ethz.ch>
+Imports: stats
 Description: Qualitatively Constrained (Regression) Smoothing via Linear
 	     Programming. OUTDATED version based on He & Ng (1999), the modified
 	     "non-simplex" algorithm of Bartels and Conn (1980).
  Use 'cobs' instead, unless for historical comparisons.
-URL: http://www.franke.nau.edu/pin-ng/cobs.html
+URL: https://curves-etc.r-forge.r-project.org/,
+     https://r-forge.r-project.org/R/?group_id=846,
+     https://r-forge.r-project.org/scm/viewvc.php/pkg/cobs99/?root=curves-etc,
+     https://www2.nau.edu/PinNg/cobs.html,
+     svn://svn.r-forge.r-project.org/svnroot/curves-etc/pkg/cobs99
+BugReports: https://r-forge.r-project.org/R/?group_id=846
 License: GPL (>= 2)

@@ -1,4 +1,12 @@
 useDynLib(cobs99)#, spline_basis, spline_value)
 
+importFrom("stats", dnorm, qchisq, qnorm, qt, resid)
+
 ## Export all names, yes, even .splBasis() etc {all for back-compatibility}:
 exportPattern(".")
+
+S3method(fitted,    cobs)
+S3method(predict,   cobs)
+S3method(print,     cobs)
+S3method(residuals, cobs)
+S3method(summary,   cobs)

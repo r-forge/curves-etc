@@ -17,6 +17,9 @@ Description: Onedimensional Normal (i.e. Gaussian) Mixture Models (S3) Classes,
 Imports: stats, graphics
 Suggests: cluster
 URL: https://curves-etc.r-forge.r-project.org/,
+     https://r-forge.r-project.org/R/?group_id=846,
+     https://r-forge.r-project.org/scm/viewvc.php/pkg/nor1mix/?root=curves-etc,
      svn://svn.r-forge.r-project.org/svnroot/curves-etc/pkg/nor1mix
+BugReports: https://r-forge.r-project.org/R/?group_id=846
 License: GPL (>= 2)
 Encoding: UTF-8

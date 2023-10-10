@@ -1,6 +1,6 @@
 Package: plugdensity
-Version: 0.8-4
-Date: 2022-02-21
+Version: 0.8-5
+Date: 2023-10-10
 Title: Plug-in Kernel Density Estimation
 Author: Eva Herrmann <eherrmann@mathematik.tu-darmstadt.de> (C original);
 	R interface etc by Martin Maechler
@@ -10,6 +10,7 @@ Description: Kernel density estimation with global bandwidth selection
 Imports: utils
 License: GPL (>= 2)
 URL: http://curves-etc.r-forge.r-project.org/,
+     https://r-forge.r-project.org/R/?group_id=846,
      https://r-forge.r-project.org/scm/viewvc.php/pkg/plugdensity/?root=curves-etc ,
      svn://svn.r-forge.r-project.org/svnroot/curves-etc/pkg/plugdensity
 BugReports: https://r-forge.r-project.org/tracker/?group_id=846&atid=3357

@@ -60,9 +60,9 @@ c     with sparam(1)=sflag, h has one of the following forms..
 c
 c     sflag=-1.e0     sflag=0.e0        sflag=1.e0     sflag=-2.e0
 c
-c       (sh11  sh12)    (1.e0  sh12)    (sh11  1.e0)    (1.e0  0.e0)
+c     (sh11  sh12)    (1.e0  sh12)    (sh11  1.e0)    (1.e0  0.e0)
 c     h=(          )    (          )    (          )    (          )
-c       (sh21  sh22),   (sh21  1.e0),   (-1.e0 sh22),   (0.e0  1.e0).
+c     (sh21  sh22),   (sh21  1.e0),   (-1.e0 sh22),   (0.e0  1.e0).
 c
       integer i,kx,ky,nsteps
       double precision sflag,sh11,sh12,sh21,sh22,two,w,z,zero
@@ -70,90 +70,92 @@ c
       data zero,two /0.0d+00,2.0d+00/
 c
       sflag=sparam(1)
-      if(n .le. 0 .or.(sflag+two.eq.zero)) go to 140
-          if(.not.(incx.eq.incy.and. incx .gt.0)) go to 70
+      if(n .le. 0 .or. (sflag+two.eq.zero)) return
+
+      if(incx.eq.incy .and. incx .gt.0) then
 c
-               nsteps=n*incx
-               if(sflag) 50,10,30
-   10          continue
-               sh12=sparam(4)
-               sh21=sparam(3)
-                    do 20 i=1,nsteps,incx
-                    w=sx(i)
-                    z=sy(i)
-                    sx(i)=w+z*sh12
-                    sy(i)=w*sh21+z
-   20               continue
-               go to 140
-   30          continue
-               sh11=sparam(2)
-               sh22=sparam(5)
-                    do 40 i=1,nsteps,incx
-                    w=sx(i)
-                    z=sy(i)
-                    sx(i)=w*sh11+z
-                    sy(i)=-w+sh22*z
-   40               continue
-               go to 140
-   50          continue
-               sh11=sparam(2)
-               sh12=sparam(4)
-               sh21=sparam(3)
-               sh22=sparam(5)
-                    do 60 i=1,nsteps,incx
-                    w=sx(i)
-                    z=sy(i)
-                    sx(i)=w*sh11+z*sh12
-                    sy(i)=w*sh21+z*sh22
-   60               continue
-               go to 140
-   70     continue
-          kx=1
-          ky=1
-          if(incx .lt. 0) kx=1+(1-n)*incx
-          if(incy .lt. 0) ky=1+(1-n)*incy
+         nsteps=n*incx
+c--   if(sflag) 50,10,30
+         if(sflag .eq. 0) then
+            sh12=sparam(4)
+            sh21=sparam(3)
+            do  i=1,nsteps,incx
+               w=sx(i)
+               z=sy(i)
+               sx(i)=w+z*sh12
+               sy(i)=w*sh21+z
+            end do
+         else if (sflag .gt. 0) then
+            sh11=sparam(2)
+            sh22=sparam(5)
+            do i=1,nsteps,incx
+               w=sx(i)
+               z=sy(i)
+               sx(i)=w*sh11+z
+               sy(i)=-w+sh22*z
+            end do
+         else ! sflag < 0
+c     50      continue
+            sh11=sparam(2)
+            sh12=sparam(4)
+            sh21=sparam(3)
+            sh22=sparam(5)
+            do i=1,nsteps,incx
+               w=sx(i)
+               z=sy(i)
+               sx(i)=w*sh11+z*sh12
+               sy(i)=w*sh21+z*sh22
+            end do
+         end if
+
+      else
+         kx=1
+         ky=1
+         if(incx .lt. 0) kx=1+(1-n)*incx
+         if(incy .lt. 0) ky=1+(1-n)*incy
 c
-          if(sflag)120,80,100
-   80     continue
-          sh12=sparam(4)
-          sh21=sparam(3)
-               do 90 i=1,n
+c         if(sflag)120,80,100
+         if(sflag .eq. 0) then
+            sh12=sparam(4)
+            sh21=sparam(3)
+            do i=1,n
                w=sx(kx)
                z=sy(ky)
                sx(kx)=w+z*sh12
                sy(ky)=w*sh21+z
                kx=kx+incx
                ky=ky+incy
-   90          continue
-          go to 140
-  100     continue
-          sh11=sparam(2)
-          sh22=sparam(5)
-               do 110 i=1,n
+            end do
+         else if(sflag .gt. 0) then
+c     100     continue
+            sh11=sparam(2)
+            sh22=sparam(5)
+            do i=1,n
                w=sx(kx)
                z=sy(ky)
                sx(kx)=w*sh11+z
                sy(ky)=-w+sh22*z
                kx=kx+incx
                ky=ky+incy
-  110          continue
-          go to 140
-  120     continue
-          sh11=sparam(2)
-          sh12=sparam(4)
-          sh21=sparam(3)
-          sh22=sparam(5)
-               do 130 i=1,n
+            end do
+         else ! sflag < 0
+c     120     continue
+            sh11=sparam(2)
+            sh12=sparam(4)
+            sh21=sparam(3)
+            sh22=sparam(5)
+            do i=1,n
                w=sx(kx)
                z=sy(ky)
                sx(kx)=w*sh11+z*sh12
                sy(ky)=w*sh21+z*sh22
                kx=kx+incx
                ky=ky+incy
-  130          continue
-  140     continue
-          return
-          end
+            end do
+         end if
+      end if
+      return
+      end
 
       subroutine srotmg1 (sd1,sd2,sx1,sy1,sparam)
 c
@@ -161,14 +163,14 @@ c
 c
 c     construct the modified givens transformation matrix h
 c     which zeros the second component of the 2-vector
-c         (sqrt(sd1)*sx1,sqrt(sd2)*sy2)**t.
+c     (sqrt(sd1)*sx1,sqrt(sd2)*sy2)**t.
 c     with sparam(1)=sflag, h has one of the following forms..
 c
 c     sflag=-1.e0     sflag=0.e0        sflag=1.e0     sflag=-2.e0
 c
-c       (sh11  sh12)    (1.e0  sh12)    (sh11  1.e0)    (1.e0  0.e0)
+c     (sh11  sh12)    (1.e0  sh12)    (sh11  1.e0)    (1.e0  0.e0)
 c     h=(          )    (          )    (          )    (          )
-c       (sh21  sh22),   (sh21  1.e0),   (-1.e0 sh22),   (0.e0  1.e0).
+c     (sh21  sh22),   (sh21  1.e0),   (-1.e0 sh22),   (0.e0  1.e0).
 c
 c     +++++++++++++++
 c     system routines  dabs
@@ -184,155 +186,169 @@ c
       data rgam /2.441e-04/
       data rgamsq /5.960e-08/
 c
-      if(.not. sd1 .lt. zero) go to 10
-c       go zero-h-d-and-sx1..
-          go to 60
-   10 continue
-c     case-sd1-nonnegative
-      sp2=sd2*sy1
-      if(.not. sp2 .eq. zero) go to 20
-          sflag=-two
-          go to 260
+      if(sd1 .ge. zero) then    !---------------- case-sd1-nonnegative
+         sp2=sd2*sy1
+         if(.not. sp2 .eq. zero) go to 20
+         sflag=-two
+         go to 260
 c     regular-case..
-   20 continue
-      sp1=sd1*sx1
-      sq2=sp2*sy1
-      sq1=sp1*sx1
+ 20      continue
+         sp1=sd1*sx1
+         sq2=sp2*sy1
+         sq1=sp1*sx1
 c
-      if(.not. dabs(sq1) .gt. dabs(sq2)) go to 40
-          sh21=-sy1/sx1
-          sh12=sp2/sp1
+         if(dabs(sq1) .gt. dabs(sq2)) then
+            sh21=-sy1/sx1
+            sh12=sp2/sp1
 c
-          su=one-sh12*sh21
-c
-          if(.not. su .le. zero) go to 30
-c         go zero-h-d-and-sx1..
+            su=one-sh12*sh21
+            if(su .le. zero) then
+c              go zero-h-d-and-sx1..
                go to 60
-   30     continue
+            else
+c 30         continue
                sflag=zero
                sd1=sd1/su
                sd2=sd2/su
                sx1=sx1*su
-c         go scale-check..
+c             go scale-check..
                go to 100
-   40 continue
-          if(.not. sq2 .lt. zero) go to 50
-c         go zero-h-d-and-sx1..
-               go to 60
-   50     continue
-               sflag=one
-               sh11=sp1/sp2
-               sh22=sx1/sy1
-               su=one+sh11*sh22
-               stemp=sd2/su
-               sd2=sd1/su
-               sd1=stemp
-               sx1=sy1*su
-c         go scale-check
-               go to 100
+            end if
+         end if
+c 40      continue
+         if(sq2 .lt. zero) then
+c     go zero-h-d-and-sx1..
+            sflag=one
+            sh11=sp1/sp2
+            sh22=sx1/sy1
+            su=one+sh11*sh22
+            stemp=sd2/su
+            sd2=sd1/su
+            sd1=stemp
+            sx1=sy1*su
+c     go scale-check
+            go to 100
+         end if
+      end if
 c     procedure..zero-h-d-and-sx1..
-   60 continue
-          sflag=-one
-          sh11=zero
-          sh12=zero
-          sh21=zero
-          sh22=zero
+ 60   continue
+      sflag=-one
+      sh11=zero
+      sh12=zero
+      sh21=zero
+      sh22=zero
 c
-          sd1=zero
-          sd2=zero
-          sx1=zero
-c         return..
-          go to 220
-c     procedure..fix-h..
-   70 continue
-      if(.not. sflag .ge. zero) go to 90
-c
-          if(.not. sflag .eq. zero) go to 80
-          sh11=one
-          sh22=one
-          sflag=-one
-          go to 90
-   80     continue
-          sh21=-one
-          sh12=one
-          sflag=-one
-   90 continue
-      go to igo,(120,150,180,210)
+      sd1=zero
+      sd2=zero
+      sx1=zero
+c     return..
+      go to 220
+
+c     procedure..fix-h..----- Big Loop ------------------------------
+ 70   continue
+      if(sflag .ge. zero) then
+         if(sflag .eq. zero) then
+            sh11=one
+            sh22=one
+            sflag=-one
+         else
+            sh21=-one
+            sh12=one
+            sflag=-one
+         end if
+      end if
+c 90   continue
+
+c old go to igo,(120,150,180,210)
+      if(igo .eq. 120) then
+         goto 120
+      else if(igo .eq. 150) then
+         goto 150
+      else if(igo .eq. 180) then
+         goto 180
+      else if(igo .eq. 210) then
+         goto 210
+      end if
 c     procedure..scale-check
-  100 continue
-  110     continue
-          if(.not. sd1 .le. rgamsq) go to 130
-               if(.not. iflag.eq.1) go to 105
-c
-c                   recompute rescaling parameters
-c                   more accurately..
-c
-                    rgam = one/gam
-                    gamsq = gam**2
-                    rgamsq = rgam**2
-                    iflag = 2
-  105          continue
-               if(sd1 .eq. zero) go to 160
-               assign 120 to igo
-c              fix-h..
-               go to 70
-  120          continue
-               sd1=sd1*gamsq
-               sx1=sx1*rgam
-               sh11=sh11*rgam
-               sh12=sh12*rgam
-          go to 110
-  130 continue
-  140     continue
-          if(.not. sd1 .ge. gamsq) go to 160
-               assign 150 to igo
-c              fix-h..
-               go to 70
-  150          continue
-               sd1=sd1*rgamsq
-               sx1=sx1*gam
-               sh11=sh11*gam
-               sh12=sh12*gam
-          go to 140
-  160 continue
-  170     continue
-          if(.not. dabs(sd2) .le. rgamsq) go to 190
-               if(sd2 .eq. zero) go to 220
-               assign 180 to igo
-c              fix-h..
-               go to 70
-  180          continue
-               sd2=sd2*gamsq
-               sh21=sh21*rgam
-               sh22=sh22*rgam
-          go to 170
-  190 continue
-  200     continue
-          if(.not. dabs(sd2) .ge. gamsq) go to 220
-               assign 210 to igo
-c              fix-h..
-               go to 70
-  210          continue
-               sd2=sd2*rgamsq
-               sh21=sh21*gam
-               sh22=sh22*gam
-          go to 200
-  220 continue
-          if(sflag)250,230,240
-  230     continue
-               sparam(3)=sh21
-               sparam(4)=sh12
-               go to 260
-  240     continue
-               sparam(2)=sh11
-               sparam(5)=sh22
-               go to 260
-  250     continue
-               sparam(2)=sh11
-               sparam(3)=sh21
-               sparam(4)=sh12
-               sparam(5)=sh22
-  260 continue
-          sparam(1)=sflag
-          return
+ 100  continue
+
+ 110  continue
+c     While ( sd1 <= rgamsq) { -------------
+        if(.not. sd1 .le. rgamsq) go to 130
+        if(iflag .eq. 1) then
+c          recompute rescaling parameters more accurately..
+           rgam = one/gam
+           gamsq = gam**2
+           rgamsq = rgam**2
+           iflag = 2
+        end if
+        if(sd1 .eq. zero) go to 160
+        igo = 120 ! assign 120 to igo
+c       fix-h..
+        go to 70
+ 120    continue
+        sd1=sd1*gamsq
+        sx1=sx1*rgam
+        sh11=sh11*rgam
+        sh12=sh12*rgam
+        go to 110
+c     } End {While} ------------------------
+
+ 130  continue
+ 140  continue
+c     While ( sd1 >= gamsq) { ---
+        if(.not. sd1 .ge. gamsq) go to 160
+        igo = 150 ! assign 150 to igo
+c       fix-h..
+        go to 70
+ 150    continue
+        sd1=sd1*rgamsq
+        sx1=sx1*gam
+        sh11=sh11*gam
+        sh12=sh12*gam
+        go to 140
+c     } End {While}
+ 160  continue
+ 170  continue
+c     While ( |sd2| <= rgamsq) { ---
+        if(.not. dabs(sd2) .le. rgamsq) go to 190
+        if(sd2 .eq. zero) go to 220
+        igo = 180 ! assign 180 to igo
+c       fix-h..
+        go to 70
+ 180    continue
+        sd2=sd2*gamsq
+        sh21=sh21*rgam
+        sh22=sh22*rgam
+      go to 170
+c     } End {While}
+ 190  continue
+ 200  continue
+c     While ( |sd2| >= gamsq) { ---
+        if(.not. dabs(sd2) .ge. gamsq) go to 220
+        igo = 210 ! assign 210 to igo
+c       fix-h..
+        go to 70
+ 210    continue
+        sd2=sd2*rgamsq
+        sh21=sh21*gam
+        sh22=sh22*gam
+        go to 200
+c     } End {While}
+ 220  continue
+      if(sflag .eq. 0) then     ! 250,230,240
+         sparam(3)=sh21
+         sparam(4)=sh12
+      else if (sflag .gt. 0) then
+         sparam(2)=sh11
+         sparam(5)=sh22
+      else                      ! (sflag < 0)
+         sparam(2)=sh11
+         sparam(3)=sh21
+         sparam(4)=sh12
+         sparam(5)=sh22
+      end if
+ 260  continue
+      sparam(1)=sflag
+      return
       end
