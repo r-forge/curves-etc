@@ -1,3 +1,12 @@
+2023-12-07  Martin Maechler  <maechler@stat.math.ethz.ch>
+
+	* DESCRIPTION (Date, Version): 1.1-0;  better URLs
+
+2022-05-31  Martin Maechler  <maechler@stat.math.ethz.ch>
+
+	* DESCRIPTION (Version): 1.0-9
+	* man/*.Rd: no longer escape by `\`  ((needed a long time ago; "wrong" nowadays))
+
 2022-05-31  Martin Maechler  <maechler@stat.math.ethz.ch>
 
 	* DESCRIPTION (Version): 1.0-9
