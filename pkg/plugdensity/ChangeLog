@@ -1,3 +1,7 @@
+2023-12-08  Martin Maechler  <maechler@stat.math.ethz.ch>
+
+	* DESCRIPTION (Version): 0.8-5; -> CRAN; new URLs
+
 2022-02-21  Martin Maechler  <maechler@stat.math.ethz.ch>
 
 	* DESCRIPTION (Version): 0.8-4; -> CRAN
