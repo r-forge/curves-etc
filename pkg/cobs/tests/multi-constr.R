@@ -1,4 +1,4 @@
-o#### Examples which use the new feature of more than one 'constraint'.
+#### Examples which use the new feature of more than one 'constraint'.
 
 suppressMessages(library(cobs))
 
