@@ -70,27 +70,29 @@ cp1c  <- cobs(x,y, degree = 1, constraint = "concave",    pointwise = con, trace
 
 cp1IC <- cobs(x,y, degree = 1, constraint = c("inc", "concave"), pointwise = con, trace = 3)
 
-## a named list of all cobs() results above:
+## Named list of all cobs() results above -- sort() collation order matters for ls() !
+(curLC <- Sys.getlocale("LC_COLLATE"))
+Sys.setlocale("LC_COLLATE", "C")
 cobsL <- mget(Filter(\(nm) is.cobs(.GlobalEnv[[nm]]), ls(patt="c[12p]")),
               envir = .GlobalEnv)
+Sys.setlocale("LC_COLLATE", curLC) # reverting
 
 knL <- lapply(cobsL, `[[`, "knots")
 str(knL[order(lengths(knL))])
 
 dput(signif(sapply(cobsL, Rsq), digits=8))
-Rsqrs <- c(c1  = 0.95079126,  c1c = 0.92974549,
-           c1i = 0.95079126, c1IC = 0.92974549,
-           c2  = 0.94637437,  c2c = 0.92505977, c2i  = 0.95022829, c2IC = 0.91375404,
-           cp1 = 0.9426453,  cp1c = 0.92223149,
-           cp1i= 0.9426453, cp1IC = 0.92223149,
-           cp2 = 0.94988863, cp2c = 0.91375409, cp2i = 0.93611487,cp2IC = 0.90051964)
+Rsqrs <- c(c1  = 0.95079126, c1IC = 0.92974549, c1c  = 0.92974549, c1i  = 0.95079126, 
+           c2  = 0.94637437, c2IC = 0.91375404, c2c  = 0.92505977, c2i  = 0.95022829, 
+           cp1 = 0.9426453, cp1IC = 0.92223149, cp1c = 0.92223149, cp1i = 0.9426453, 
+           cp2 = 0.94988863, cp2IC= 0.90051964, cp2c = 0.91375409, cp2i = 0.93611487)
 
 all.equal(Rsqrs, sapply(cobsL, Rsq), tolerance=0) #  2.6277e-9 (Lnx F 38)
 stopifnot(exprs = {
     all.equal(Rsqrs, sapply(cobsL, Rsq))
-    identical(c(5L, 3L, 5L, 3L, 3L, 3L, 4L, 2L,
-                5L, 3L, 5L, 3L, 4L, 2L, 4L, 2L),
-              unname(lengths(knL)))
+    identical(c(5L, 3L, 3L, 5L,
+                3L, 2L, 3L, 4L,
+                5L, 3L, 3L, 5L,
+                4L, 2L, 2L, 4L), unname(lengths(knL)))
 })
 
 plot(x,y, main = "cobs(*, degree= 1, constraint = *, pointwise= *)")
