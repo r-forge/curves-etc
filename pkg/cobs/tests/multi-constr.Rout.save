@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2024-02-01 r85851) -- "Unsuffered Consequences"
+R version 4.3.2 Patched (2024-01-28 r85841) -- "Eye Holes"
 Copyright (C) 2024 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -28,6 +28,28 @@ Type 'q()' to quit R.
 > source(system.file(package="Matrix", "test-tools-1.R", mustWork=TRUE))
 Loading required package: tools
 > ##--> tryCatch.W.E(), showProc.time(), assertError(), relErrV(), ...
+> ## IGNORE_RDIFF_BEGIN
+> Sys.info()
+                                              sysname 
+                                              "Linux" 
+                                              release 
+                             "5.19.4-200.fc36.x86_64" 
+                                              version 
+"#1 SMP PREEMPT_DYNAMIC Thu Aug 25 17:42:04 UTC 2022" 
+                                             nodename 
+                                             "nb-mm5" 
+                                              machine 
+                                             "x86_64" 
+                                                login 
+                                           "maechler" 
+                                                 user 
+                                           "maechler" 
+                                       effective_user 
+                                           "maechler" 
+> ## IGNORE_RDIFF_END
+>  Lnx  <- Sys.info()[["sysname"]] == "Linux"
+> isMac <- Sys.info()[["sysname"]] == "Darwin"
+> x86 <- (arch <- Sys.info()[["machine"]]) == "x86_64"
 > 
 > Rsq <- function(obj) {
 +     stopifnot(inherits(obj, "cobs"), is.numeric(res <- obj$resid))
@@ -257,6 +279,7 @@ qbsks2():
 > cp2i <- r2i$value
 > ## IGNORE_RDIFF_BEGIN
 > r2i$warning
+NULL
 > ## IGNORE_RDIFF_END
 > ## when plotting it, we see that it gave a trivial constant!!
 > cp2c  <- cobs(x,y, constraint = "concave",  pointwise = con, trace = 3)
@@ -429,21 +452,27 @@ List of 16
  $ cp1  : num [1:5] -1 -0.449 0.163 0.776 2
  $ cp1i : num [1:5] -1 -0.449 0.163 0.776 2
 > 
-> dput(signif(sapply(cobsL, Rsq), digits=8))
+> gotRsqrs <- sapply(cobsL, Rsq)
+> Rsqrs <- c(c1  = 0.95079126, c1IC = 0.92974549, c1c  = 0.92974549, c1i  = 0.95079126,
++            c2  = 0.94637437, c2IC = 0.91375404, c2c  = 0.92505977, c2i  = 0.95022829,
++            cp1 = 0.9426453, cp1IC = 0.92223149, cp1c = 0.92223149, cp1i = 0.9426453,
++            cp2 = 0.94988863, cp2IC= 0.90051964, cp2c = 0.91375409, cp2i = 0.93611487)
+> ## M1 mac   "  =     "     , cp2IC= 0.91704726,  "   =      "    , cp2i = 0.94620178
+> ##                                  ^^^^^^^^^^                            ^^^^^^^^^^
+> ## remove these from testing, notably for the M1 Mac:
+> iR2 <- if(!x86) setdiff(names(cobsL), c("cp2IC", "cp2i")) else TRUE
+> ## IGNORE_RDIFF_BEGIN
+> dput(signif(gotRsqrs, digits=8))
 c(c1 = 0.95079126, c1IC = 0.92974549, c1c = 0.92974549, c1i = 0.95079126, 
 c2 = 0.94637437, c2IC = 0.91375404, c2c = 0.92505977, c2i = 0.95022829, 
 cp1 = 0.9426453, cp1IC = 0.92223149, cp1c = 0.92223149, cp1i = 0.9426453, 
 cp2 = 0.94988863, cp2IC = 0.90051964, cp2c = 0.91375409, cp2i = 0.93611487
 )
-> Rsqrs <- c(c1  = 0.95079126, c1IC = 0.92974549, c1c  = 0.92974549, c1i  = 0.95079126, 
-+            c2  = 0.94637437, c2IC = 0.91375404, c2c  = 0.92505977, c2i  = 0.95022829, 
-+            cp1 = 0.9426453, cp1IC = 0.92223149, cp1c = 0.92223149, cp1i = 0.9426453, 
-+            cp2 = 0.94988863, cp2IC= 0.90051964, cp2c = 0.91375409, cp2i = 0.93611487)
-> 
-> all.equal(Rsqrs, sapply(cobsL, Rsq), tolerance=0) #  2.6277e-9 (Lnx F 38)
+> all.equal(Rsqrs[iR2], gotRsqrs[iR2], tolerance=0) #  2.6277e-9 (Lnx F 38); 2.6898e-9 (M1 mac)
 [1] "Mean relative difference: 2.62771e-09"
+> ## IGNORE_RDIFF_END
 > stopifnot(exprs = {
-+     all.equal(Rsqrs, sapply(cobsL, Rsq))
++     all.equal(Rsqrs[iR2], gotRsqrs[iR2])
 +     identical(c(5L, 3L, 3L, 5L,
 +                 3L, 2L, 3L, 4L,
 +                 5L, 3L, 3L, 5L,
@@ -480,4 +509,4 @@ cp2 = 0.94988863, cp2IC = 0.90051964, cp2c = 0.91375409, cp2i = 0.93611487
 > 
 > proc.time()
    user  system elapsed 
-  2.342   0.377   2.782 
+  1.979   0.159   2.136 
