@@ -19,6 +19,9 @@ tests/wind.Rout.save
 tests/.*.Rout.save-[3264]
 tests/.*-N-
 tests/swaplink-
+[Ii]ssues.md$
+^CRAN
+^M1mac
 SAFE
 paper
 Archive

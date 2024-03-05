@@ -10,13 +10,14 @@ if(!dev.interactive(orNone=TRUE)) pdf("multi-constr.pdf")
 source(system.file("util.R", package = "cobs"))
 source(system.file(package="Matrix", "test-tools-1.R", mustWork=TRUE))
 ##--> tryCatch.W.E(), showProc.time(), assertError(), relErrV(), ...
-## IGNORE_RDIFF_BEGIN
-Sys.info()
-## IGNORE_RDIFF_END
  Lnx  <- Sys.info()[["sysname"]] == "Linux"
 isMac <- Sys.info()[["sysname"]] == "Darwin"
 x86 <- (arch <- Sys.info()[["machine"]]) == "x86_64"
-(noLdbl <- (.Machine$sizeof.longdouble <= 8)) ## TRUE when --disable-long-double
+noLdbl <- (.Machine$sizeof.longdouble <= 8) ## TRUE when --disable-long-double
+## IGNORE_RDIFF_BEGIN
+Sys.info()
+noLdbl
+## IGNORE_RDIFF_END
 
 
 Rsq <- function(obj) {
@@ -103,10 +104,11 @@ Rsqrs <- c(c1  = 0.95079126, c1IC = 0.92974549, c1c  = 0.92974549, c1i  = 0.9507
 ## remove these two from testing, notably for the M1 Mac & noLD .. :
 ##iR2 <- if(!x86 || noLdbl) setdiff(names(cobsL), c("cp2IC", "cp2i")) else TRUE
 ## actually everywhere, because of ATLAS, openBLAS, MKL, Intel... :
-iR2 <- setdiff(names(cobsL), c("cp2IC", "cp2i"))
+iR2 <- setdiff(names(cobsL), nR2 <- c("cp2IC", "cp2i"))
 ## IGNORE_RDIFF_BEGIN
 dput(signif(gotRsqrs, digits=8))
-all.equal(Rsqrs[iR2], gotRsqrs[iR2], tolerance=0) #  2.6277e-9 (Lnx F 38); 2.6898e-9 (M1 mac)
+all.equal(Rsqrs[iR2], gotRsqrs[iR2], tolerance=0)# 2.6277e-9 (Lnx F 38); 2.6898e-9 (M1 mac)
+all.equal(Rsqrs[nR2], gotRsqrs[nR2], tolerance=0)# differ; drastically only for 'noLD'
 ## IGNORE_RDIFF_END
 stopifnot(exprs = {
     all.equal(Rsqrs[iR2], gotRsqrs[iR2])
