@@ -16,6 +16,8 @@ Sys.info()
  Lnx  <- Sys.info()[["sysname"]] == "Linux"
 isMac <- Sys.info()[["sysname"]] == "Darwin"
 x86 <- (arch <- Sys.info()[["machine"]]) == "x86_64"
+(noLdbl <- (.Machine$sizeof.longdouble <= 8)) ## TRUE when --disable-long-double
+
 
 Rsq <- function(obj) {
     stopifnot(inherits(obj, "cobs"), is.numeric(res <- obj$resid))
@@ -92,9 +94,16 @@ Rsqrs <- c(c1  = 0.95079126, c1IC = 0.92974549, c1c  = 0.92974549, c1i  = 0.9507
            cp1 = 0.9426453, cp1IC = 0.92223149, cp1c = 0.92223149, cp1i = 0.9426453,
            cp2 = 0.94988863, cp2IC= 0.90051964, cp2c = 0.91375409, cp2i = 0.93611487)
 ## M1 mac   "  =     "     , cp2IC= 0.91704726,  "   =      "    , cp2i = 0.94620178
+## noLD     "  =     "     , cp2IC=-0.08244284,  "   =      "    , cp2i = 0.94636815
+## ATLAS    "  =     "     , cp2IC= 0.91471729,  "   =      "    , cp2i = 0.94506339
+## openBLAS "  =     "     , cp2IC= 0.91738019,  "   =      "    , cp2i = 0.93589404
+## MKL      "  =     "     , cp2IC= 0.91765403,  "   =      "    , cp2i = 0.94501205
+## Intel    "  =     "     , cp2IC= 0.91765403,  "   =      "    , cp2i = 0.94501205
 ##                                  ^^^^^^^^^^                            ^^^^^^^^^^
-## remove these from testing, notably for the M1 Mac:
-iR2 <- if(!x86) setdiff(names(cobsL), c("cp2IC", "cp2i")) else TRUE
+## remove these two from testing, notably for the M1 Mac & noLD .. :
+##iR2 <- if(!x86 || noLdbl) setdiff(names(cobsL), c("cp2IC", "cp2i")) else TRUE
+## actually everywhere, because of ATLAS, openBLAS, MKL, Intel... :
+iR2 <- setdiff(names(cobsL), c("cp2IC", "cp2i"))
 ## IGNORE_RDIFF_BEGIN
 dput(signif(gotRsqrs, digits=8))
 all.equal(Rsqrs[iR2], gotRsqrs[iR2], tolerance=0) #  2.6277e-9 (Lnx F 38); 2.6898e-9 (M1 mac)
