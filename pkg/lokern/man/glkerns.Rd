@@ -195,9 +195,9 @@ glkerns(x, \dots)
 %  \url{http://www.jstor.org/stable/2241411}
 
   - variance estimation:\cr
-  T. Gasser, L. Sroka & C. Jennen-Steinmetz (1986)
-  Residual and residual pattern in nonlinear regression.
-  \emph{Biometrika} \bold{73}, 625--633.
+  Theo Gasser, Lothar Sroka & Christine Jennen-Steinmetz (1986)
+  Residual Variance and Residual Pattern in Nonlinear Regression.
+  \emph{Biometrika} \bold{73}, 625--633. \doi{10.2307/2336527}
 
   - adapting heteroscedasticity:\cr
   E. Herrmann (1997)

@@ -19,10 +19,10 @@ varNPreg(x, y)
 }
 \note{
   This is an \R interface to the \code{resest} Fortran subroutine, used
-  in \code{\link{lokerns}} and \code{\link{glkerns}}, see their help
-  pages for references and context.
+  in \code{\link{lokerns}} and \code{\link{glkerns}}, see the latter's help
+  page for references and context.
 
-  Earlier version of the \pkg{lokern} package accidentally, contained
+  Earlier version of the \pkg{lokern} package accidentally contained
   \code{varest()} which has been an identical copy of \code{varNPreg()}.
 }
 \value{
