@@ -10,8 +10,11 @@ set.seed(123)
 for(n in nms) {
     o <- n1Env[[n]]
     cat("\n",n,":\n"); print(o)
-    cat("4 random X from", n,":")
-    print(rnorMix(4, o))
+    ro4 <- rnorMix(4, o)
+    if(nchar(sub("^MW.nm", "", n)) == 1) { # the first MW.nm<n>  do not show diffs
+        cat("4 random X from", n,":")
+        print(ro4)
+    }
 
     ## Testing of sort.norMix():
     if(is.unsorted(o[,"mu"]))
