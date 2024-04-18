@@ -82,8 +82,8 @@ c Var
       double precision ex,ex2,tt,g1,g2,sx,dn
 
       sigma2=0.
-      ex =x(1)*(t(2)-t(1))
-      ex2=x(1)*ex
+      ex =x(1)*(t(2)-t(1)) ! to be E[ X ]  ~= E[ Y ]  in notation  Y_i = m(x_i) + E_i
+      ex2=x(1)*ex          ! to be E[X^2]  ~= E[Y^2]  ....
       do i=2,n-1
          tt=t(i+1)-t(i-1)
          if(tt.ne.0.) then
@@ -118,11 +118,13 @@ c     last points
       res(n)= (x(n)-g1*x(n-2)-g2*x(n-1)) / sqrt(1.+g1*g1+g2*g2)
 
       sigma2=(sigma2+ res(1)*res(1)+ res(n)*res(n))/n
-c  snr := explained variance ( = R^2 )
+c  snr := explained variance ( = R^2 ) -- used for 'variance check' in glkerns() / lokerns()
+c    1. add the last (n_th) terms to {ex,ex2}
       sx=x(n)*(t(n)-t(n-1))
       dn=2.*(t(n)-t(1))
       ex =(ex + sx    )/dn
       ex2=(ex2+x(n)*sx)/dn
+c    2. "R^2" = 1 - \sigma^2 / \sigma_0^2;  sigma0^2 = var(Y) = E[Y^2] - E[Y]^2
       if(ex2.gt.0) then
          snr= 1 - sigma2/(ex2-ex*ex)
       else

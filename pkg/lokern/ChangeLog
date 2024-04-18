@@ -1,4 +1,9 @@
-2023-02-20  Martin Maechler  <maechler@lynne>
+2024-04-18  Martin Maechler  <maechler@stat.math.ethz.ch>
+
+	* man/varNPreg.Rd: in example, show res[] <-> sigma2, and 'snr'
+	* DESCRIPTION (Version): 1.1-11 - ready for release
+
+2023-02-20  Martin Maechler <maechler@stat.math.ethz.ch>
 
 	* DESCRIPTION (Date): updated, Version: 1.1-10 - ready for release
 
