@@ -41,7 +41,7 @@
   data \code{x}, in the \code{\link{lokerns}} or \code{\link{glkerns}}
   call.
 
-  The \code{plot()} method calls \code{\link{plotDS}} from
+  The \code{plot()} method calls \code{\link[sfsmisc]{plotDS}} from
   package \CRANpkg{sfsmisc}.
 
   \code{predict(object, x, deriv)} when either some \code{x} are not in
@@ -63,7 +63,7 @@ fn <- function(x) 5 - x/2 + 3*exp(-(x-5)^2)
 y <- fn(x) + rnorm(x)/4
 plot(x,y)
 ## Tracing the phases in the Fortran code: trace=1 gives some, trace=3 gives *much*
-lof <- lokerns(x,y, trace=2) 
+lof <- lokerns(x,y, trace=2)
 plot(lof)
 plot(lof, cex = 1/4)# maybe preferable
 plot(fn, 0, 10, add=TRUE, col=adjustcolor("gray40",1/2), lwd=2, lty=2)

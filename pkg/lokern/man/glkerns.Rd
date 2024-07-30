@@ -22,14 +22,15 @@ glkerns(x, \dots)
 }
 %% FIXME : The argument list of lokerns() and glkerns() are identical
 %% -----   and the \arguments{..} description is 99% identical
+%%				('local bandwith array' vs 'global bandwith')
 %% ====> Really should  merge these help pages or make one of them very short!
 \arguments{
   \item{x}{vector of design points, not necessarily ordered.}
   \item{y}{vector of observations of the same length as \code{x}.}
   \item{deriv}{order of derivative of the regression function to be
-    estimated.  Only deriv=0,1,2 are allowed for automatic smoothing,
-    whereas deriv=0,1,2,3,4 is possible when smoothing with a global input
-    bandwidth.  The default value is deriv=0.}
+    estimated.  Only \code{deriv = 0,1,2} are allowed for automatic smoothing,
+    whereas \code{deriv = 0,1,2,3,4} is possible when smoothing with
+    a global input bandwidth.  By default, \code{deriv=0}.}
   \item{n.out}{number of output design points where the function has to
     be estimated; default is \code{n.out=300}.}
   \item{x.out}{vector of output design points where the function has to
@@ -43,7 +44,7 @@ glkerns(x, \dots)
     In order for \code{\link{residuals}()} or \code{\link{fitted}()}
     methods to be applicable, it must be \code{TRUE} or a character
     string specifying one of the \code{methods}s of
-    \code{\link{seqXtend}} (package \CRANpkg{sfsmisc}). The default,
+    \code{\link[sfsmisc]{seqXtend}} (package \CRANpkg{sfsmisc}). The default,
     \code{TRUE} corresponds to method \code{"aim"}.
   }
   \item{korder}{
