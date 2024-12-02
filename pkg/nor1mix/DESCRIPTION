@@ -15,7 +15,7 @@ Description: Onedimensional Normal (i.e. Gaussian) Mixture Models (S3) Classes,
    number generation and graphics. Fitting to data by efficient ML (Maximum
    Likelihood) or traditional EM estimation.
 Imports: stats, graphics
-Suggests: cluster, copula
+Suggests: cluster, copula, norMmix
 URL: https://curves-etc.r-forge.r-project.org/,
      https://r-forge.r-project.org/R/?group_id=846,
      https://r-forge.r-project.org/scm/viewvc.php/pkg/nor1mix/?root=curves-etc,
