@@ -1,5 +1,7 @@
+## -*-sh-*-  using reg.exp (==> no initial or final '.*'),  but case is ignored!
+
 DESCRIPTION_Author
 DESCRIPTION\+R
-^do-.*
-.*-log
+^do-
+-log
 
