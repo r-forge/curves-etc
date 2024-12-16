@@ -1,3 +1,4 @@
+## -*-sh-*-  using reg.exp (==> no initial or final '.*'),  but case does *not* matter
 convexreg-PietGr
 .----------------------
 \.Rhistory
@@ -7,9 +8,12 @@ He-example
 INDEX-manual
 cobs_cs.ps
 ls-l\.orig
-NAMESPACE\+.*
-no-NAME.*
+NAMESPACE\+$
+no-NAME$
 scobs_.*\.txt
+checkRes\.txt
+Rdev.*\.txt
+Rdev.*clang.*failed\.R$
 src/Notes_SR
 .*/SR.*\.rds$
 tests/ex1.Rout-dbg
