@@ -74,7 +74,7 @@ Loading required package: tools
 [1,]    2    2    0
 > 
 > ## Using 'trace = 3' --> 'trace = 2' inside drqssbc2()
-> 
+> ##
 > ## Regression splines (lambda = 0)
 > c2   <- cobs(x,y,                               trace = 3)
 qbsks2():
@@ -266,17 +266,8 @@ Warning messages:
 2: In rq.fit.sfn(Xeq, Yeq, tau = tau, rhs = rhs, control = rqCtrl) :
   tiny diagonals replaced with Inf when calling blkfct
 
-> 
-> plot(c1)
-> lines(predict(c1i), col="forest green")
-> ## IGNORE_RDIFF_BEGIN
-> all.equal(fitted(c1), fitted(c1i), tol = 1e-9)# but not 1e-10
-[1] "Mean relative difference: 0.0215671"
-> ## (2024-12:-- now mean rel.diff. 0.0215671 <--> IGNORE)
-> ## IGNORE_RDIFF_END
-> 
 > ## now gives warning (not error):
-> c1IC <- cobs(x,y, degree = 1, constraint = c("inc", "concave"), trace = 3)
+> c1IC <- cobs(x,y, degree = 1, constraint=c("inc","concav"), trace = 3)
 qbsks2():
  Performing general knot selection ...
  l1.design2(): ->  Xeq   50 x 2 (nz = 100 =^=     1%) 
@@ -304,6 +295,15 @@ Warning messages:
   too few knots ==> nk <= 4; could not add constraint 'concave'
 2: In l1.design2(x, w, constraint, ptConstr, knots, pw, nrq = n, nl1,  :
   too few knots ==> nk <= 4; could not add constraint 'concave'
+> 
+> plot(c1)
+> lines(predict(c1i), col="forest green")
+> ## IGNORE_RDIFF_BEGIN
+> all.equal(fitted(c1), fitted(c1i), tol = 1e-9)# but not 1e-10
+[1] "Mean relative difference: 0.0215671"
+> ## (2024-12:-- now mean rel.diff. 0.0215671 <--> IGNORE)
+> ## IGNORE_RDIFF_END
+> 
 > 
 > cp2  <- cobs(x,y,                          pointwise = con, trace = 3)
 qbsks2():
@@ -537,8 +537,8 @@ cp2 = 0.94988863, cp2IC = 0.90051964, cp2c = 0.91375409, cp2i = 0.93611487
 )
 > all.equal(Rsqrs[iR2], gotRsqrs[iR2], tolerance=0)# 2.6277e-9 (Lnx F 38); 2.6898e-9 (M1 mac)
 [1] "Mean relative difference: 0.000374227"
-> ##  c1 and c2 changed (Fedora new gcc/clang, quantreg 5.99.1 Date/Publication: 2024-11-22)
-> ##  BUG ?? (in quantreg / cobs / Fortran / C/ .... ?) ____ TODO: *Find* out (NB: the new R^2 values are *higher* which is good)
+> ## c1 and c2 changed (Fedora new gcc/clang, quantreg 5.99.1 Date/Publication: 2024-11-22)
+> ## BUG ?? (in quantreg / cobs / Fortran / C/ .... ?) ____ TODO: *Find* out (c1 R^2 is *higher*, 2nd one is lower ..)
 > ##            vvvvvv
 > ## c(c1 = 0.95341697, c1IC = 0.92974549, c1c = 0.92974549, c1i = 0.95079126,
 > ##   c2 = 0.94864721, c2IC = 0.91375404, c2c = 0.92505977, c2i = 0.95022829,
@@ -584,4 +584,4 @@ cp2 = 0.94988863, cp2IC = 0.90051964, cp2c = 0.91375409, cp2i = 0.93611487
 > 
 > proc.time()
    user  system elapsed 
-qy  1.958   0.290   2.313 
+  1.958   0.290   2.313 
