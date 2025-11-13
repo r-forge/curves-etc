@@ -4,6 +4,7 @@
 #include <Rmath.h>
 #include <Rinternals.h>
 #include <float.h>
+#include "simest.h"
 
 void derivcvxpec(int dim[], double t[], double zhat[], double D[], double kk[]){
 	int n = dim[0], r = dim[1], f = dim[2], flag = 0;

@@ -3,10 +3,10 @@
 \alias{simestgcv.default}
 \docType{data}
 \title{
-Single Index Model Estimation: Objective Function Approach (using GCV).
+Single Index Model Estimation: Objective Function Approach.
 }
 \description{
-This function provides an estimate of the non-parametric function and the index vector by minimizing an objective function corresponding to smooth.pen by choosing the required tuning parameter using GCV.
+This function provides an estimate of the non-parametric function and the index vector by minimizing an objective function specified by the method argument and also by choosing tuning parameter using GCV.
 }
 \usage{
 simestgcv(x, y, w = NULL, beta.init = NULL, nmulti = NULL,
@@ -50,7 +50,7 @@ with no constraints on f. The penalty parameter \eqn{\lambda} is choosen by the 
 	\item{convergence}{a numeric storing convergence status for the index parameter.}
 	\item{itervec}{a vector of length nmulti storing the number of iterations taken by each of the multiple starts.}
 	\item{iter}{a numeric giving the total number of iterations taken.}
-	\item{method}{method is always set to \code{smooth.pen.gcv}.}
+	\item{method}{method is always set to "smooth.pen.reg".}
 	\item{regress}{An output of the regression function used needed for predict.}
 	\item{x.values}{sorted `x.betahat' values obtained by the algorithm.}
 	\item{y.values}{corresponding `y' values in input.}
@@ -64,12 +64,11 @@ Kuchibhotla, A. K., Patra, R. K. and Sen, B. (2015+). On Single Index Models wit
 }
 \author{Arun Kumar Kuchibhotla, arunku@wharton.upenn.edu}
 \examples{
-set.seed(10)
 args(sim.est)
 x <- matrix(runif(20*2,-1,1),ncol = 2)
 b0 <- rep_len(1,2)/sqrt(2)
 y <- (x\%*\%b0)^2 + rnorm(20,0,0.3)
-tmp2 <- simestgcv(x, y, lambda = c(20^{2/11}, 20^{1/5}), nmulti = 1, 
+tmp2 <- simestgcv(x, y, lambda = c(20^{1/6}, 20^{1/4}), nmulti = 1, 
 					agcv.iter = 10, maxit = 10, beta.tol = 1e-03)
 print(tmp2)
 plot(tmp2)

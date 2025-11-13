@@ -102,7 +102,7 @@ predict.cvx.lse.reg <- function(object, newdata = NULL, deriv = 0, ...){
       newdata <- as.vector(newdata)
       r <- length(newdata)
       dim <- c(n,r,f)
-      out <- .C("derivcvxpec", as.integer(dim), as.double(t), as.double(zhat), as.double(D), as.double(newdata))
+      out <- .C(derivcvxpec, as.integer(dim), as.double(t), as.double(zhat), as.double(D), as.double(newdata))
       return(out[[5]])
   }
 }	

@@ -3,6 +3,7 @@
 #include <Rmath.h>
 #include <Rinternals.h>
 #include <float.h>
+#include "simest.h"
 
 /****************************************************************/
 

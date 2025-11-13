@@ -13,13 +13,13 @@ This function provides an estimate of the non-parametric function and the index 
 }
 \usage{
 sim.est(x, y, w = NULL, beta.init = NULL, nmulti = NULL, L = NULL,
-        lambda = NULL, maxit = 100, bin.tol = 1e-05, beta.tol = 1e-05,
-        method = c("cvx.pen","cvx.lip","cvx.lse","smooth.pen"), 
-        progress = TRUE)
+                    lambda = NULL, maxit = 100, bin.tol = 1e-05, beta.tol = 1e-05,
+                    method = c("cvx.pen","cvx.lip","cvx.lse","smooth.pen"), 
+                    progress = TRUE, force = FALSE)
 \method{sim.est}{default}(x, y, w = NULL, beta.init = NULL, nmulti = NULL, L = NULL,
-        lambda = NULL, maxit = 100, bin.tol = 1e-05, beta.tol = 1e-05,
-        method = c("cvx.pen","cvx.lip","cvx.lse","smooth.pen"), 
-        progress = TRUE)
+                    lambda = NULL, maxit = 100, bin.tol = 1e-05, beta.tol = 1e-05,
+                    method = c("cvx.pen","cvx.lip","cvx.lse","smooth.pen"), 
+                    progress = TRUE, force = FALSE)
 \method{plot}{sim.est}(x,...)
 \method{print}{sim.est}(x,...)
 \method{predict}{sim.est}(object, newdata = NULL, deriv = 0, ...)
@@ -38,6 +38,7 @@ sim.est(x, y, w = NULL, beta.init = NULL, nmulti = NULL, L = NULL,
 	\item{beta.tol}{A tolerance level for stopping iterative algorithm for the index vector.}
 	\item{maxit}{An integer specifying the maximum number of iterations for each initial \eqn{\beta} vector.}
 	\item{progress}{A logical denoting if progress of the algorithm is to be printed. Defaults to TRUE.}
+	\item{force}{A logical indicating the use of \code{cvx.lse.reg} or \code{cvx.lse.con.reg}. Defaults to FALSE and uses \code{cvx.lse.con.reg}}
 	\item{object}{An object of class `sim.est'.}
 	\item{...}{Any additional arguments to be passed.}
 	\item{newdata}{a matrix of new data points in the predict function.}
@@ -45,11 +46,11 @@ sim.est(x, y, w = NULL, beta.init = NULL, nmulti = NULL, L = NULL,
 }
 
 \details{
-The function minimizes 
+The function minimizes
 \deqn{\sum_{i=1}^n w_i(y_i - f(x_i^{\top}\beta))^2 + \lambda\int\{f''(x)\}^2dx}
 with constraints on \eqn{f} dictated by method = `cvx.pen' or `smooth.pen'. For method = `cvx.lip' or `cvx.lse', the function minimizes
 \deqn{\sum_{i=1}^n w_i(y_i - f(x_i^{\top}\beta))^2}
-with constraints on \eqn{f} disctated by method = `cvx.lip' or `cvx.lse'. The penalty parameter \eqn{\lambda} is not choosen by any criteria. It has to be specified for using method \eqn{=} `cvx.pen', `cvx.lip' or `smooth.pen' and \eqn{\lambda} denotes the Lipschitz constant for using the method \eqn{=} `cvx.lip.reg'. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals and progression of the algorithm. Predict function now allows calculation of the first derivative.
+with constraints on \eqn{f} disctated by method = `cvx.lip' or `cvx.lse'. The penalty parameter \eqn{\lambda} is not choosen by any criteria. It has to be specified for using method \eqn{=} `cvx.pen', `cvx.lip' or `smooth.pen' and \eqn{\lambda} denotes the Lipschitz constant for using the method \eqn{=} `cvx.lip.reg'. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals and progression of the algorithm. Predict function now allows calculation of the first derivative. In applications, it might be advantageous to scale of the covariate matrix \code{x} before passing into the function which brings more stability to the algorithm.
 }
 \value{
 	An object of class `sim.est', basically a list including the elements
@@ -80,25 +81,25 @@ Kuchibhotla, A. K., Patra, R. K. and Sen, B. (2015+). On Single Index Models wit
 \author{Arun Kumar Kuchibhotla, arunku@wharton.upenn.edu}
 \examples{
 args(sim.est)
-x <- matrix(runif(20*2,-1,1),ncol = 2)
-b0 <- rep_len(1,2)/sqrt(2)
-y <- (x\%*\%b0)^2 + rnorm(20,0,0.3)
-tmp1 <- sim.est(x, y, lambda = 0.01, method = "cvx.pen", nmulti = 3)
-tmp2 <- sim.est(x, y, L = 10, method = "cvx.lip", nmulti = 3)
-tmp3 <- sim.est(x, y, lambda = 0.01, method = "smooth.pen", nmulti = 3)
-tmp4 <- sim.est(x, y, method = "cvx.lse", nmulti = 3)
+x <- matrix(runif(50*3,-1,1),ncol = 3)
+b0 <- rep_len(1,3)/sqrt(3)
+y <- (x\%*\%b0)^2 + rnorm(50,0,0.3)
+tmp1 <- sim.est(x, y, lambda = 0.01, method = "cvx.pen", nmulti = 5)
+%tmp2 <- sim.est(x, y, L = 10, method = "cvx.lip", nmulti = 5)
+tmp3 <- sim.est(x, y, lambda = 0.01, method = "smooth.pen", nmulti = 5)
+%tmp4 <- sim.est(x, y, method = "cvx.lse", nmulti = 5)
 print(tmp1)
-print(tmp2)
+%print(tmp2)
 print(tmp3)
-print(tmp4)
+%print(tmp4)
 plot(tmp1)
-plot(tmp2)
+%plot(tmp2)
 plot(tmp3)
-plot(tmp4)
-predict(tmp1, newdata = c(0,0))
-predict(tmp2, newdata = c(0,0))
-predict(tmp3, newdata = c(0,0))
-predict(tmp4, newdata = c(0,0))
+%plot(tmp4)
+predict(tmp1, newdata = c(0,0,0))
+%predict(tmp2, newdata = c(0,0,0))
+predict(tmp3, newdata = c(0,0,0))
+%predict(tmp4, newdata = c(0,0,0))
 }
 \keyword{Single Index Model}
 \keyword{Penalized Least Squares}

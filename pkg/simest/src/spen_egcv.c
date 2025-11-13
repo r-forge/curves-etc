@@ -3,6 +3,7 @@
 #include <Rmath.h>
 #include <Rinternals.h>
 #include <float.h>
+#include "simest.h"
 
 void spen_egcv(int dim[], double x[], double y[], double w[], double h[],
 		double QtyPerm[], double lambda[], double m[],

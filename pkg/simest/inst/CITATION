@@ -11,12 +11,12 @@ citEntry(entry = "Manual",
   					as.person("Rohit Kumar Patra")),
   year         = year,
   note         = note,
-  url          = "http://CRAN.R-project.org/package=simest",
+  url          = "https://CRAN.R-project.org/package=simest",
 
   textVersion  =
   paste("Arun Kumar Kuchibhotla and Rohit Kumar Patra",
         sprintf("(%s).", year),   
         "simest: Single Index Model Estimation with Constraints on Link Function",
         paste(note, ".", sep = ""),
-        "URL http://CRAN.R-project.org/package=simest")
+        "URL https://CRAN.R-project.org/package=simest")
 )

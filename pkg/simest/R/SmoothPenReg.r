@@ -30,10 +30,10 @@ smooth.pen.reg.default <- function (x, y, lambda, w = NULL, agcv = FALSE, agcv.i
 	  stop("'lambda' must be non-negative and finite")
 	h <- diff(x)
 	Qty <- diff(diff(y)/h)
-	out <- .C("spen_egcv", n = as.integer(n), x = as.double(x), y = as.double(y),
+	out <- .C(spen_egcv, n = as.integer(n), x = as.double(x), y = as.double(y),
 	  w = as.double(w),  h = as.double(h), Qty = as.double(Qty),
 	  lm = as.double(c(lambda,0)), yhat = double(n), iter = as.integer(agcv.iter),
-	  EGCV = as.integer(flag), agcv = as.double(0), PACKAGE = "simest")
+	  EGCV = as.integer(flag), agcv = as.double(0))
 	# print(out$EGCV)
 	m <- out$yhat
 	tmp <- splinefun(x, m)

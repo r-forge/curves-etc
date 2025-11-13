@@ -3,13 +3,47 @@
 #include <Rmath.h>
 #include <Rinternals.h>
 #include <float.h>
+#include "simest.h"
 
-void cpen(int dim[], double t[], double z[], double w[], double a0[],
-	double lambda[], double Ky[], double L[], double U[], double fun[],
-	double res[], int flag[], double tol[], double zhat[], int iter[],
-	double Deriv[]){
+void cpen(int dim[], double t_input[], double z_input[], double w_input[], 
+	double a0_input[], double lambda_input[], double Ky_input[], 
+	double L_input[], double U_input[], double fun_input[],
+	double res_input[], int flag[], double tol_input[], 
+	double zhat_input[], int iter[], double Deriv_input[])
+{
 	int n = dim[0], maxit = dim[1], k = 0;
-	long double p = lambda[0], r=0.0, s=0.0, tp=0.0, xmult=0.0, tmp=0.0, tmp1=0.0, tmp2=0.0, ek=0.0, obj=0.0;
+	long double p = lambda_input[0], r=0.0, s=0.0, tp=0.0, tol=tol_input[0];
+	long double xmult=0.0, tmp=0.0, tmp1=0.0, tmp2=0.0, ek=0.0, obj=0.0;
+	// Initialization to convert inputs of type double to long double.
+	long double *t 		= (long double *) R_allocLD(n);
+	long double *z 		= (long double *) R_allocLD(n);
+	long double *w 		= (long double *) R_allocLD(n);
+	long double *fun 	= (long double *) R_allocLD(n);
+	long double *res 	= (long double *) R_allocLD(n);
+	long double *zhat 	= (long double *) R_allocLD(n);
+	long double *Deriv 	= (long double *) R_allocLD(n);
+	for(int II = n-1; II >= 0; II--){
+		t[II] = t_input[II];
+		z[II] = z_input[II];
+		w[II] = w_input[II];
+		fun[II] = fun_input[II]; 	
+		res[II] = res_input[II]; 	
+		zhat[II] = zhat_input[II]; 
+		Deriv[II] = Deriv_input[II];
+	}
+	long double *L = (long double *) R_allocLD(n-1);
+	long double *U = (long double *) R_allocLD(n-1);
+	for(int II = n-2; II >= 0; II--){
+		L[II] = L_input[II];
+		U[II] = U_input[II];
+	}
+	long double *a0 = (long double *) R_allocLD(n-2);
+	long double *Ky = (long double *) R_allocLD(n-2);
+	for(int II = n-3; II >= 0; II--){
+		a0[II] = a0_input[II];
+		Ky[II] = Ky_input[II];
+	}
+	// Conversion of double inputs to long double done.
 	long double *D0 = (long double *) R_allocLD(n-2);
 	long double *UD01 = (long double *) R_allocLD(n-2);
 	long double *UD02 = (long double *) R_allocLD(n-2);
@@ -182,10 +216,10 @@ void cpen(int dim[], double t[], double z[], double w[], double a0[],
 		}
 		// Solution a1 computed.
 		vi2[k] = obj; // The objective function.
-		// We see for k > 1, if the absolte change in the objective value is less than tol[0]
+		// We see for k > 1, if the absolte change in the objective value is less than tol
 		// and also that the norm of the derivative is less than 1e-02.
 		// If k reaches the maximum iteration number, then we compute the values for the last a0.
-		if((k > 1 && fabsl(vi2[k] - vi2[k-1]) <= tol[0] && sqrtl(ek) <= 1e-02) || k == maxit - 1){
+		if((k > 1 && fabsl(vi2[k] - vi2[k-1]) <= tol && sqrtl(ek) <= 1e-02) || k == maxit - 1){
 			flag[0] = 0;
 			if(k == maxit - 1){
 				flag[0] = 1; // If k = maxit - 1, we set flag = 1 to see non-convergence.
@@ -242,4 +276,21 @@ void cpen(int dim[], double t[], double z[], double w[], double a0[],
 			k = k+1; // and of course increase the iteration number.
 		}
 	}
+	for(int II = n-1; II >= 0; II--){
+		t_input[II] = (double) t[II];
+		z_input[II] = (double) z[II];
+		w_input[II] = (double) w[II];
+		fun_input[II] = (double) fun[II];	
+		res_input[II] = (double) res[II];
+		zhat_input[II] = (double) zhat[II]; 
+		Deriv_input[II] = (double) Deriv[II];
+	}
+	for(int II = n-2; II >= 0; II--){
+		L_input[II] = (double) L[II];
+		U_input[II] = (double) U[II];
+	}
+	for(int II = n-3; II >= 0; II--){
+		a0_input[II] = (double) a0[II];
+		Ky_input[II] = (double) Ky[II];
+	}	
 }

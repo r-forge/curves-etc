@@ -33,15 +33,15 @@ cvx.lip.reg(t, z, w = NULL, L,...)
 
 \details{
 The function minimizes 
-\deqn{\sum_{i=1}^n w_i(y_i - \theta_i)^2} 
+\deqn{\sum_{i=1}^n w_i(z_i - \theta_i)^2} 
 subject to
-\deqn{-L\le\frac{\theta_2 - \theta_1}{x_2 - x_1}\le\cdots\le\frac{\theta_n - \theta_{n-1}}{x_n - x_{n-1}}\le L}
-for sorted \eqn{x} values and \eqn{y} reorganized such that \eqn{y_i} corresponds to the new sorted \eqn{x_i}. This function uses the \code{nnls} function from the \code{nnls} package to perform the constrained minimization of least squares. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals. Predict function now allows calculating the first derivative also.
+\deqn{-L\le\frac{\theta_2 - \theta_1}{t_2 - t_1}\le\cdots\le\frac{\theta_n - \theta_{n-1}}{t_n - t_{n-1}}\le L}
+for sorted \eqn{t} values and \eqn{z} reorganized such that \eqn{z_i} corresponds to the new sorted \eqn{t_i}. This function uses the \code{nnls} function from the \code{nnls} package to perform the constrained minimization of least squares. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals. Predict function now allows calculating the first derivative also.
 }
 \value{
 	An object of class `cvx.lip.reg', basically a list including the elements
-	\item{x.values}{sorted `x' values provided as input.}
-	\item{y.values}{corresponding `y' values in input.}
+	\item{x.values}{sorted `t' values provided as input.}
+	\item{y.values}{corresponding `z' values in input.}
 	\item{fit.values}{corresponding fit values of same length as that of `x.values'.}
 	\item{deriv}{corresponding values of the derivative of same length as that of `x.values'.}
 	\item{residuals}{residuals obtained from the fit.}

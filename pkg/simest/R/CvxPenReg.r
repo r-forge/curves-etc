@@ -25,10 +25,10 @@ cvx.pen.reg.default <- function(x, y, lambda, w = NULL, tol = 1e-05, maxit = 100
 	n <- length(w)
 	Ky <- diff(diff(z)/diff(t))/diff(t,2)
 	a0 <- rep(1,n-2)
-	out <- .C("cpen",dim = as.integer(c(n,maxit)), t = as.double(t), z = as.double(z), w = as.double(w), 
+	out <- .C(cpen,dim = as.integer(c(n,maxit)), t = as.double(t), z = as.double(z), w = as.double(w), 
 		a0 = as.double(a0), lambda = as.double(lambda), Ky = as.double(Ky), L = double(n-1), U = double(n-1), 
 		fun = double(n), res = double(n), flag = as.integer(1), tol = as.double(tol), zhat = double(n), 
-		iter = as.integer(1), Deriv = double(n), PACKAGE = "simest")
+		iter = as.integer(1), Deriv = double(n))
 	ret <- list(x.values = t, y.values = z)
 	ret$residuals <- out$res
 	ret$fit.values <- out$zhat
@@ -93,7 +93,7 @@ predict.cvx.pen.reg <- function(object, newdata = NULL,...){
 	L <- object$lower
 	U <- object$upper
 	fun <- object$AlphaMVal
-	out <- .C("predcvxpen", dim = as.integer(c(k,n)), x = as.double(x), t = as.double(t), 
+	out <- .C(predcvxpen, dim = as.integer(c(k,n)), x = as.double(x), t = as.double(t), 
 			zhat = as.double(zhat), deriv = as.double(deriv), L = as.double(L), U = as.double(U), 
 			fun = as.double(fun), P = double(k), Q = double(k), R = double(k))
 	ret <- cbind(out$x, out$Q, out$P, out$R)

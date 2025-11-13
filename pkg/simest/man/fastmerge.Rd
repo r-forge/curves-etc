@@ -28,8 +28,7 @@ If two values in the first column of DataMat are separated by a value less than 
 \seealso{
 	See also the function \code{\link{smooth.spline}}.
 }
-\author{Arun Kumar Kuchibhotla, arunku@wharton.upenn.edu, 
-Rohit Kumar Patra, rohit@stat.columbia.edu.}
+\author{Arun Kumar Kuchibhotla, arunku@wharton.upenn.edu.}
 \examples{
 args(fastmerge)
 x <- runif(100,-1,1)
