@@ -9,6 +9,7 @@
 conreg <- function(x, y = NULL, w = NULL, convex = FALSE,
 		   method = c("Duembgen06_R", "SR"),
 		   tol = c(1e-10, 1e-7),
+                   digitsMerge = 6,
                    maxit = c(500, 20),
 		   adjTol = TRUE, verbose = FALSE)
 {
@@ -89,8 +90,9 @@ conreg <- function(x, y = NULL, w = NULL, convex = FALSE,
         (w * sum(w > 0))/sum(w)
       }# now sum(w) == #{obs. with weight > 0} == sum(w > 0)
 
-    ## Replace y[] (and w[]) for same x[] (to 6 digits precision) by their mean :
-    x <- signif(x, 6)
+    ## Replace y[] (and w[]) for same x[] (to `digitsMerge` (= 6 by def.) precision) by their mean :
+    stopifnot(digitsMerge >= 2)
+    x <- signif(x, digitsMerge)
     x. <- unique(sort(x))
     nx <- length(x.)
     if(nx == 0) stop("need at least one x value")
@@ -187,7 +189,7 @@ conreg <- function(x, y = NULL, w = NULL, convex = FALSE,
     ## could also use "adaptive" prec:
     ## while (max(H) > (prec <- tol * mean(abs(wR),trim=.1)) && iter < maxit) {
 
-    iter <- innerIt <- 0
+    iter <- innerIt <- 0L
     while (max(H) > prec && iter < maxit[1]) {
       ## extend the set of knots - at  max_H location:
       ## isKnot[(im <- which.max(H))] <- TRUE
@@ -199,7 +201,7 @@ conreg <- function(x, y = NULL, w = NULL, convex = FALSE,
       ## check new candidate's concavity; local convexities, desired <= 0
       Conv	<- locConvexities(x., M)
       Conv_new	<- locConvexities(x., M_new)
-      iit <- 0
+      iit <- 0L
       while (max(Conv_new) > eConv && iit < maxit[2]) {
         if(verbose) cat(".")
         ## modify M_new and (typically!) reduce the set of knots:
@@ -219,7 +221,7 @@ conreg <- function(x, y = NULL, w = NULL, convex = FALSE,
 
         M_new	 <- locEstimate(x., rWy, rtW, iK)
         Conv_new  <- locConvexities(x.,M_new)
-        iit <- iit + 1
+        iit <- iit + 1L
       }
       innerIt <- innerIt + iit
       if(verbose) cat("\n")
@@ -232,7 +234,7 @@ conreg <- function(x, y = NULL, w = NULL, convex = FALSE,
       iK <- c(1L, i.n[Conv < -eConv], nx) ## = locKnInd(Conv,eConv)
       wR <- (M-y.)* w.
       H	 <- locDirDeriv(x., wR, iK)
-      iter <- iter+1
+      iter <- iter+1L
     } ## while (outer iter)
 
     iter <- c(iter, innerIt)

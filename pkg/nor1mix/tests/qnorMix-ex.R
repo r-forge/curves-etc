@@ -1,6 +1,9 @@
 ## Marron Wand examples are defined as norMix() calls in  ../R/zMarrWand-dens.R
 library("nor1mix")
 
+op <- options(keep.source = FALSE, # to keep quote(..) result small
+              warnPartialMatchArgs = FALSE)
+
 ii <- c(32, 39, 40, 40, 48, 48, 49, 56, 57, 58, 65)
 pp <- 0.486 + ii / 100000 # very constrained set
 
@@ -38,24 +41,37 @@ stopifnot(all.equal(qv, qv., tol = 1e-5))
 qnorMixLog <- function(p, obj, lower.tail = TRUE, ...)
     suppressWarnings(qnorMix(p, obj, lower.tail=lower.tail, log.p=TRUE, ...))
 ##
+chk <- quote({
+        all.equal(pnorMix(q0, MW.nm2), u0, tolerance = tol1)
+        all.equal(q0,  qL,     tolerance = tol2)
+        all.equal(q0., qL.,    tolerance = tol3)
+        all.equal(q0[i.], q0., tolerance = tol4)# no Newton => less accuracy
+})
+chkTrue <- do.call(expression, as.list(chk)[-1L])
+tol1 <- 1e-15
+tol2 <- 1e-14
+tol3 <- 1e-10
+tol4 <-  6e-6
+
 n2 <- 8
 set.seed(11)
 for(i in 1:50) {
-cat(i, "", if(i %% 20 == 0)"\n")
-u0 <- c(0,sort(runif(n2)),1)
-q0 <- qnorMix(u0,   MW.nm2,                   trace=0, tol=4e-16)
-qL <- qnorMix(1-u0, MW.nm2, lower.tail=FALSE, trace=0, tol=4e-16)
-stopifnot(all.equal(pnorMix(q0, MW.nm2), u0, tol=1e-15),
-          all.equal(q0, qL, tol=1e-14))
-i. <- 2:(n2+1); u0. <- u0[i.]
-## --- log.p= TRUE  [no Newton steps]
-q0. <- qnorMixLog(log  ( u0.), MW.nm2,                   tol=4e-16)
-qL. <- qnorMixLog(log1p(-u0.), MW.nm2, lower.tail=FALSE, tol=4e-16)
-stopifnot(all.equal(pnorMix(q0, MW.nm2), u0, tol=1e-15),
-	  all.equal(q0, qL,   tol=1e-14),
-	  all.equal(q0., qL., tol=1e-10),
-	  all.equal(q0[i.], q0., tol = 6e-6)# no Newton => less accuracy
-	  )
+    cat(i, "", if(i %% 20 == 0)"\n")
+    u0 <- c(0,sort(runif(n2)),1)
+    q0 <- qnorMix(u0,   MW.nm2,                   trace=0, tol=4e-16)
+    qL <- qnorMix(1-u0, MW.nm2, lower.tail=FALSE, trace=0, tol=4e-16)
+    i. <- 2:(n2+1); u0. <- u0[i.]
+    ## --- log.p= TRUE  [no Newton steps]
+    q0. <- qnorMixLog(log  ( u0.), MW.nm2,                   tol=4e-16)
+    qL. <- qnorMixLog(log1p(-u0.), MW.nm2, lower.tail=FALSE, tol=4e-16)
+    ## first show (tol* = 0), then check with the tolerances {tol1, tol2}
+    local({ tol1 <- tol2 <- tol3 <- tol4 <- 0
+        cat("With  tol1 = tol2 = tol3 = tol4 = 0 :\n")
+        for(ee in chkTrue)
+            cat(deparse1(ee), ": ", eval(ee), "\n")
+    })
+    stopifnot(exprObject = chkTrue)
+    cat("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 }; cat("\n")
 
 ## A  'trace = 3'  example --- had a bug w/o noticing (in 1.1-1, maybe earlier):
@@ -66,4 +82,5 @@ stopifnot(all.equal(q3.1, q3.2, tol = 1e-5),
 	  all.equal(q3.2, q3.3, tol = 1e-5),
 	  all.equal(q3.3, q3.1, tol = 1e-5))
 
+options(op)
 cat('Time elapsed: ', proc.time(),'\n') # for ``statistical reasons''
