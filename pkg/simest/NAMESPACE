@@ -1,8 +1,9 @@
 useDynLib(simest, .registration = TRUE)
 exportPattern(".")
 importFrom(nnls, nnls)
-importFrom("graphics", "abline", "lines", "par", "plot", "plot.window")
-importFrom("stats", "splinefun", "predict", "qqline", "qqnorm", "runif", "na.omit")
+importFrom("graphics", "abline", "lines", "par", "plot", "plot.window", "hist")
+importFrom("stats", "splinefun", "predict", "qqline", "qqnorm", "runif", 
+			"na.omit", "optim", "optimize", "rnorm", "var")
 
 S3method(print, cvx.pen.reg)
 S3method(print, cvx.lip.reg)
@@ -25,3 +26,4 @@ S3method(cvx.lse.reg, default)
 S3method(cvx.lip.reg, default)
 S3method(smooth.pen.reg, default)
 S3method(sim.est, default)
+S3method(simestgcv, default)

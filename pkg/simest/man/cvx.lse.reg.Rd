@@ -16,7 +16,7 @@ cvx.lse.reg(t, z, w = NULL,...)
 \method{cvx.lse.reg}{default}(t, z, w = NULL, ...)
 \method{plot}{cvx.lse.reg}(x,...)
 \method{print}{cvx.lse.reg}(x,...)
-\method{predict}{cvx.lse.reg}(object, newdata = NULL,...)
+\method{predict}{cvx.lse.reg}(object, newdata = NULL, deriv = 0, ...)
 }
 
 \arguments{
@@ -27,13 +27,14 @@ cvx.lse.reg(t, z, w = NULL,...)
 	\item{x}{An object of class `cvx.lse.reg'. This is for plot and print function.}
 	\item{object}{An object of class `cvx.lse.reg'.}
 	\item{newdata}{a matrix of new data points in the predict function.}
+	\item{deriv}{a numeric either 0 or 1 representing which derivative to evaluate.}
 }
 \details{
 The function minimizes 
 \deqn{\sum_{i=1}^n w_i(y_i - \theta_i)^2} 
 subject to
 \deqn{\frac{\theta_2 - \theta_1}{x_2 - x_1}\le\cdots\le\frac{\theta_n - \theta_{n-1}}{x_n - x_{n-1}}}
-for sorted \eqn{x} values and \eqn{y} reorganized such that \eqn{y_i} corresponds to the new sorted \eqn{x_i}. This function previously used the \code{coneA} function from the \code{coneproj} package to perform the constrained minimization of least squares. Currently, the code makes use of the \code{nnls} function from \code{nnls} package for the same purpose. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals.
+for sorted \eqn{x} values and \eqn{y} reorganized such that \eqn{y_i} corresponds to the new sorted \eqn{x_i}. This function previously used the \code{coneA} function from the \code{coneproj} package to perform the constrained minimization of least squares. Currently, the code makes use of the \code{nnls} function from \code{nnls} package for the same purpose. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals. Predict function now allows computation of the first derivative.
 }
 \value{
 	An object of class `cvx.lse.reg', basically a list including the elements

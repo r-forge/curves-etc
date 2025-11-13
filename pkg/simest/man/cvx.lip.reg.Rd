@@ -16,7 +16,7 @@ cvx.lip.reg(t, z, w = NULL, L,...)
 \method{cvx.lip.reg}{default}(t, z, w = NULL, L, ...)
 \method{plot}{cvx.lip.reg}(x,...)
 \method{print}{cvx.lip.reg}(x,...)
-\method{predict}{cvx.lip.reg}(object, newdata = NULL,...)
+\method{predict}{cvx.lip.reg}(object, newdata = NULL, deriv = 0, ...)
 }
 
 \arguments{
@@ -28,6 +28,7 @@ cvx.lip.reg(t, z, w = NULL, L,...)
 	\item{x}{an object of class `cvx.lip.reg'.}
 	\item{object}{An object of class `cvx.lip.reg'.}
 	\item{newdata}{a matrix of new data points in the predict function.}
+	\item{deriv}{a numeric either 0 or 1 representing which derivative to evaluate.}
 }
 
 \details{
@@ -35,7 +36,7 @@ The function minimizes
 \deqn{\sum_{i=1}^n w_i(y_i - \theta_i)^2} 
 subject to
 \deqn{-L\le\frac{\theta_2 - \theta_1}{x_2 - x_1}\le\cdots\le\frac{\theta_n - \theta_{n-1}}{x_n - x_{n-1}}\le L}
-for sorted \eqn{x} values and \eqn{y} reorganized such that \eqn{y_i} corresponds to the new sorted \eqn{x_i}. This function uses the \code{nnls} function from the \code{nnls} package to perform the constrained minimization of least squares. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals.
+for sorted \eqn{x} values and \eqn{y} reorganized such that \eqn{y_i} corresponds to the new sorted \eqn{x_i}. This function uses the \code{nnls} function from the \code{nnls} package to perform the constrained minimization of least squares. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals. Predict function now allows calculating the first derivative also.
 }
 \value{
 	An object of class `cvx.lip.reg', basically a list including the elements

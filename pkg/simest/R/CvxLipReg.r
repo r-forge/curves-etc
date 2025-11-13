@@ -15,11 +15,9 @@ cvx.lip.reg.default <- function(t, z, w = NULL, L, ...){
     else {
       if (n != length(w)) 
           stop("lengths of 'x' and 'w' must match")
-      if (any(w < 0)) 
-          stop("all weights should be non-negative")
-      if (all(w == 0)) 
-          stop("some weights should be positive")
-      (w * sum(w > 0))
+      if (any(w <= 0)) 
+          stop("all weights should be positive")
+      w
     }
   A <- cbind(t, z, w)  
   A <- A[order(A[,1]),]
@@ -49,7 +47,7 @@ cvx.lip.reg.default <- function(t, z, w = NULL, L, ...){
   # print(A%*%fit - b)
   deriv <- diff(fit)/diff(x)
   deriv <- c(deriv, deriv[length(deriv)])
-  ret1 <- list(x.values = x, y.values = y, fit.values = fit, iter = 1, deriv = deriv,
+  ret1 <- list(x.values = x, y.values = y, w = w, fit.values = fit, iter = 1, deriv = deriv,
     residuals = y - fit, minvalue = mean({w*{y-fit}^2}), convergence = tmp$mode)
   ret1$call <- match.call()
   class(ret1) <- "cvx.lip.reg"
@@ -78,11 +76,11 @@ plot.cvx.lip.reg <- function(x, ...){
     par(mfrow=c(2,2), mar=c(3,3,3,1), mgp=c(1.3,.5,0))
     plot(xx,yx,xlab = 'x',ylab = expression(paste('y and ',hat(y),' values')), 
       type = 'p', pch = "*", cex = 1, main = "Convex Lipschitz Regression\n using Least Squares")
-    lines(xx, fitx, lwd = 2)
+    lines(xx, fitx, lwd = 2,col = "red")
     plot(fitx,resx,xlab = 'Fitted Values',ylab = "Residuals",pch = "*", type = 'p', main = "Fitted vs Residuals")
-    abline(h = 0.0, lty = 4)
+    abline(h = 0.0, lty = 4, col = "red")
     plot(yx,fitx,xlab = "Actual Values",ylab = "Fitted Values",pch = "*", type = 'p', main = "Actual vs Fitted")
-    abline(a = 0, b = 1, lty = 4)
+    abline(a = 0, b = 1, lty = 4, col = "red")
     qqnorm(resx)
     qqline(resx)
   } else{
@@ -95,31 +93,23 @@ plot.cvx.lip.reg <- function(x, ...){
   invisible(list(x = xx, y = yx, fit = fitx))
 }
 
-predict.cvx.lip.reg <- function(object, newdata = NULL, ...){
-	x <- object$x.values
-	y <- object$y.values
-	fit <- object$fit.values
-	deriv <- object$deriv
-	n <- length(x)
+predict.cvx.lip.reg <- function(object, newdata = NULL, deriv = 0, ...){
+  if(deriv == 0 || deriv == 1) f = deriv
+  else stop("deriv must either be 0 or 1!")
+  t <- unname(object$x.values)
+  zhat <- unname(object$fit.values)
+  D <- unname(object$deriv)
+  n <- length(t)
 	if(is.null(newdata)){
     	warning("No 'newdata' found and so using input 'x' values")
-    	return(fit)
+    	if(deriv == 0) return(zhat)
+      if(deriv == 1) return(D)  
   	} else{
     	newdata <- as.vector(newdata)
     	r <- length(newdata)
-    	foo <- function(t){
-    		if(t < x[1]){
-    			return(fit[1] + deriv[1]*{t - x[1]})
-    		}
-    		if(t > x[n]){
-    			return(fit[n] + deriv[n]*{t - x[n]})
-    		}
-    		for(i in 1:{n-1}){
-      			if(t >= x[i] & t <= x[i+1]){
-        			return(fit[i] + deriv[i]*{t - x[i]})
-      			}
-    		}
-  		}
-  		return(as.vector(unlist(sapply(newdata[seq_len(r)],foo,simplify = TRUE,USE.NAMES = FALSE))))
+      dim <- c(n,r,f)
+      out <- .C("derivcvxpec", as.integer(dim), as.double(t), as.double(zhat), 
+        as.double(D), as.double(newdata))
+      return(out[[5]])
 	}
 }	
