@@ -14,10 +14,10 @@ This function provides an estimate of the non-parametric function and the index 
 \usage{
 sim.est(x, y, method = c("cvx.pen","cvx.lip","cvx.lse","smooth.pen"),
 		lambda = NULL, beta.init = NULL, w = NULL, nmulti = 5, bin.tol = 1e-04,
-		beta.tol = 1e-04, beta.iter = 100, msg = TRUE,...)
+		beta.tol = 1e-04, beta.iter = 100,...)
 \method{sim.est}{default}(x, y, method = c("cvx.pen","cvx.lip","cvx.lse","smooth.pen"),
 		lambda = NULL, beta.init = NULL, w = NULL, nmulti = 5, bin.tol = 1e-04,
-		beta.tol = 1e-04, beta.iter = 100, msg = TRUE,...)
+		beta.tol = 1e-04, beta.iter = 100,...)
 \method{plot}{sim.est}(x,...)
 \method{print}{sim.est}(x,...)
 \method{predict}{sim.est}(object, newdata = NULL,...)
@@ -34,7 +34,6 @@ sim.est(x, y, method = c("cvx.pen","cvx.lip","cvx.lse","smooth.pen"),
 	\item{bin.tol}{A tolerance level upto which the x values used in regression are recognized as distinct values.}
 	\item{beta.tol}{A tolerance level for stopping iterative algorithm for the index vector.}
 	\item{beta.iter}{Maximum number of iterations for the index vector.}
-	\item{msg}{If msg is true then some messages will be printed while the code executes.}
 	\item{...}{Any additional arguments.}
 	\item{object}{An object of class `sim.est'.}
 	\item{newdata}{a matrix of new data points in the predict function.}
@@ -43,7 +42,9 @@ sim.est(x, y, method = c("cvx.pen","cvx.lip","cvx.lse","smooth.pen"),
 \details{
 The function minimizes 
 \deqn{\sum_{i=1}^n w_i(y_i - f(x_i^{\top}\beta))^2 + \lambda\int\{f''(x)\}^2dx}
-with constraints on \eqn{f} dictated by method. The penalty parameter \eqn{\lambda} is not choosen by any criteria. It has to be specified for using method = `cvx.pen.reg' or `smooth.pen.reg' and \eqn{L} has to be specified for using method \eqn{=} `cvx.lip.reg'. 
+with constraints on \eqn{f} dictated by method = `cvx.pen' or `smooth.pen'. For method = `cvx.lip' or `cvx.lse', the function minimizes
+\deqn{\sum_{i=1}^n w_i(y_i - f(x_i^{\top}\beta))^2}
+with constraints on \eqn{f} disctated by method = `cvx.lip' or `cvx.lse'. The penalty parameter \eqn{\lambda} is not choosen by any criteria. It has to be specified for using method \eqn{=} `cvx.pen', `cvx.lip' or `smooth.pen' and \eqn{\lambda} denotes the Lipschitz constant for using the method \eqn{=} `cvx.lip.reg'. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals and progression of the algorithm.
 }
 \value{
 	An object of class `smooth.pen.reg', basically a list including the elements
@@ -59,8 +60,8 @@ with constraints on \eqn{f} dictated by method. The penalty parameter \eqn{\lamb
 	\item{regress}{An output of the regression function used needed for predict.}
 	\item{x.values}{sorted `x.betahat' values obtained by the algorithm.}
 	\item{y.values}{corresponding `y' values in input.}
-	\item{fit.values}{corresponding fit values of same length as that of `x.betahat'.}
-	\item{deriv}{corresponding values of the derivative of same length as that of `x.betahat'.}
+	\item{fit.values}{corresponding fit values of same length as that of \eqn{x\beta}.}
+	\item{deriv}{corresponding values of the derivative of same length as that of \eqn{x\beta}.}
 	\item{residuals}{residuals obtained from the fit.}
 	\item{minvalue}{minimum value of the objective function attained.}
 }

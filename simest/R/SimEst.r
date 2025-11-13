@@ -1,12 +1,12 @@
 sim.est <- function(x, y, method = c("cvx.pen", "cvx.lip", 
                         "cvx.lse", "smooth.pen"), lambda = NULL, 
                         beta.init = NULL, w = NULL, nmulti = 5, 
-                        bin.tol = 1e-04, beta.tol = 1e-04, beta.iter = 100, msg = TRUE, ...) UseMethod("sim.est")
+                        bin.tol = 1e-04, beta.tol = 1e-04, beta.iter = 100, ...) UseMethod("sim.est")
 
 sim.est.default <- function(x, y, method = c("cvx.pen", "cvx.lip", 
                         "cvx.lse", "smooth.pen"), lambda = NULL, 
                         beta.init = NULL, w = NULL, nmulti = 5, 
-                        bin.tol = 1e-04, beta.tol = 1e-04, beta.iter = 100, msg = TRUE, ...){
+                        bin.tol = 1e-04, beta.tol = 1e-04, beta.iter = 100, ...){
 	if(length(method) > 1L)
 		stop("'method' should be a vector of length 1!")
 	if(!(method %in% c("cvx.pen", "cvx.lip", "cvx.lse", "smooth.pen")))
@@ -28,7 +28,7 @@ sim.est.default <- function(x, y, method = c("cvx.pen", "cvx.lip",
 	if(n <= 2)
         stop("Number of samples must be greater than 2.")
     w <- if (is.null(w)) 
-        rep_len(1, n)/n
+        rep_len(1, n)
       else {
         if (n != length(w)) 
             stop("lengths of 'x' and 'w' must match")
@@ -36,7 +36,7 @@ sim.est.default <- function(x, y, method = c("cvx.pen", "cvx.lip",
             stop("all weights should be non-negative")
         if (all(w == 0)) 
             stop("some weights should be positive")
-        (w * sum(w > 0))/sum(w)
+        (w * sum(w > 0))
       }
     if(!is.null(beta.init))
         nmulti <- 1  
@@ -65,15 +65,15 @@ sim.est.default <- function(x, y, method = c("cvx.pen", "cvx.lip",
     			(beta.init*{2*{beta.init[1] > 0} - 1}/norm(beta.init))		
     		}
     b0 <- beta.init		
-    BetaPath <- vector("list",nmulti)
-    ObjValPath <- vector("list",nmulti)
+    BetaPath <- rep(list(matrix(NA,nrow = beta.iter,ncol = ncol(x))),nmulti)
+    ObjValPath <- rep(list(rep(NA,beta.iter)),nmulti)
     flag <- rep(0,nmulti)
     beta.conv <- rep(1,nmulti)
     iter <- rep(1,nmulti)
     Min <- rep(0,nmulti)
     for(k in 1:nmulti){
       if(k > 1){
-          cat("multistart ",k-1," of ",nmulti," done!\n")
+          cat("\r multistart ",k-1," of ",nmulti," done!")
           beta.init <- runif(ncol(x), -1, 1)
           beta.init <- beta.init/norm(beta.init)
           beta.init <- beta.init*{2*{beta.init[1] > 0} - 1}
@@ -88,8 +88,8 @@ sim.est.default <- function(x, y, method = c("cvx.pen", "cvx.lip",
     	t <- DataMat[,1]
     	z <- DataMat[,2]
     	tmp <- regress(t, z, q)
-    	BetaPath[[k]] <- rbind(BetaPath[[k]], unname(beta.init))
-        ObjValPath[[k]] <- c(ObjValPath[[k]], unname(tmp$minvalue))
+    	BetaPath[[k]][i,] <- unname(beta.init)
+        ObjValPath[[k]][i] <- unname(tmp$minvalue)
         deriv <- tmp$deriv
         res <- tmp$residuals
         x.mat <- DataMat[,-c(1,2)]
@@ -103,21 +103,26 @@ sim.est.default <- function(x, y, method = c("cvx.pen", "cvx.lip",
     	beta.init <- b1
         i <- i + 1
       }
+      BetaPath[[k]] <- as.matrix(unname(as.data.frame(na.omit(BetaPath[[k]]))))
+      ObjValPath[[k]] <- as.numeric(na.omit(ObjValPath[[k]]))
       if(flag[k] == 0){ iter[k] <- beta.iter; beta.conv[k] <- 1 }
       ttmp <- ObjValPath[[k]]
-      Min[k] <- min(ttmp[1:iter[k]])
+      Min[k] <- min(ttmp)
     }
-    cat("multistart ",nmulti," of ",nmulti," done!\n")
+    cat("\rmultistart ",nmulti," of ",nmulti," done!\r\n")
     K <- which.min(Min)
     B <- BetaPath[[K]][which.min(ObjValPath[[K]]),]
     t <- x%*%B
-    DataMat <- cbind(t, y, x)
+    DataMat <- unname(cbind(t, y, x))
+    # print(cbind(DataMat,w))
     tmp <- fastmerge(DataMat, w = w, tol = bin.tol)
     q <- tmp$w
+    # print(cbind(tmp$DataMat,q))
     t <- tmp$DataMat[,1]
     z <- tmp$DataMat[,2]
     out <- regress(t, z, q)
-    ret <- list(beta = B, beta.init = b0, nmulti = nmulti, minvalue = out$minvalue, x.values = out$x.values, y.values = out$y.values)
+    ret <- list(beta = B, beta.init = b0, nmulti = nmulti, 
+    	minvalue = out$minvalue, x.values = out$x.values, y.values = out$y.values)
     ret$fit.values <- out$fit.values
     ret$x.mat <- tmp$DataMat[,-c(1,2)]
     ret$BetaPath <- BetaPath
@@ -167,9 +172,9 @@ plot.sim.est <- function(x,...){
     	plot.window(c(0,7), c(0,7))
     	par(mfrow = c(2,2), mar = c(3,3,3,1), mgp = c(1.8,0.5,0))
     	plot(xx, yx, xlab = expression(x^T*hat(beta)), ylab = expression(paste('y and ',hat(y),' values')),
-    		type = 'p', pch = "*", cex = 1, main = tt)
+    		type = 'p', pch = 20, cex = 1, main = tt)
     	lines(xx, fitx, lwd = 2)
-    	plot(fitx,resx,xlab = 'Fitted Values',ylab = "Residuals",pch = "*", type = 'p', main = "Fitted vs Residuals")
+    	plot(fitx,resx,xlab = 'Fitted Values',ylab = "Residuals",pch = 20, type = 'p', main = "Fitted vs Residuals")
 	    abline(h = 0.0, lty = 4)
         ttt <- max(unlist(lapply(x$ObjValPath,FUN=max)))
         tttp <- min(unlist(lapply(x$ObjValPath,FUN=min)))
@@ -181,7 +186,7 @@ plot.sim.est <- function(x,...){
                 lines(seq_len(x$itervec[i+1]),x$ObjValPath[[i+1]][seq_len(x$itervec[i+1])], lty = i)
             }
         }    
-	    qqnorm(resx,main="Normal Q-Q Plot: Residuals",pch = "*")
+	    qqnorm(resx,main="Normal Q-Q Plot: Residuals",pch = 20)
 	    qqline(resx)
     } else{
     	plot.window(c(0,7), c(0,7))
@@ -194,8 +199,12 @@ plot.sim.est <- function(x,...){
 predict.sim.est <- function(object, newdata = NULL, ...){
 	req <- object$regress
 	B <- object$beta
+	if(!is.numeric(newdata)){
+		stop("'newdata' should be numeric!")
+	}
 	if(!is.null(newdata)){
-		newdata <- as.matrix(newdata)
+		newdata <- c(newdata)
+		newdata <- matrix(newdata, ncol = length(B))
 		t <- newdata%*%B
 		return(predict(req, t))
 	} else{

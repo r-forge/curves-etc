@@ -3,11 +3,12 @@ Type: Package
 LazyLoad: yes
 LazyData: yes
 Package: simest
-Version: 0.1
-Author: Arun Kumar Kuchibhotla <arunku@wharton.upenn.edu>
+Version: 0.2
+Author: Arun Kumar Kuchibhotla <arunku@wharton.upenn.edu>, 
+		Rohit Kumar Patra <rkp2117@columbia.edu>
 Maintainer: Arun Kumar Kuchibhotla <arunku@wharton.upenn.edu>
-Date: 2015-09-19
-Imports: nnls, coneproj
+Date: 2015-09-29.
+Imports: nnls
 Description: Estimation of function and index vector in single index model with and without shape constraints including different smoothness conditions.
 License: GPL-2
 NeedsCompilation: yes

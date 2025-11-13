@@ -37,7 +37,7 @@ cvx.pen.reg(t, z, lambda, w = NULL,
 \details{
 The function minimizes 
 \deqn{\sum_{i=1}^n w_i(y_i - f(x_i))^2 + \lambda\int\{f''(x)\}^2dx} 
-subject to convexity constraint on \eqn{f}.
+subject to convexity constraint on \eqn{f}. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals.
 }
 \value{
 	An object of class `cvx.pen.reg', basically a list including the elements

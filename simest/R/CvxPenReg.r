@@ -1,8 +1,6 @@
 cvx.pen.reg <- function(t, z, lambda, w = NULL, max.iter = 500, alpha.tol= 1e-03, ...) UseMethod("cvx.pen.reg")
 
 cvx.pen.reg.default <- function(t, z, lambda, w = NULL, max.iter = 500, alpha.tol= 1e-03, ...){
-  p <- lambda
-  tol <- alpha.tol
   if(length(t) != length(z))
     stop("'x' and 'y' must have same length.")  
   if (!all(is.finite(c(t, z)))) 
@@ -17,9 +15,11 @@ cvx.pen.reg.default <- function(t, z, lambda, w = NULL, max.iter = 500, alpha.to
             stop("lengths of 'x' and 'w' must match")
         if (any(w <= 0)) 
             stop("all weights should be positive")
-        (w * sum(w > 0))/n
+        w/sum(w > 0)
     }
   q <- w
+  p <- lambda
+  tol <- alpha.tol
   if (!is.finite(p) || p < 0)
     stop("'lambda' must be non-negative and finite")  
   A <- cbind(t, z, w)
@@ -30,7 +30,7 @@ cvx.pen.reg.default <- function(t, z, lambda, w = NULL, max.iter = 500, alpha.to
   n <- length(t)
   N <- n-2
   K <- matrix(0,nrow = N, ncol = N+2)
-  a.i <- diff(diff(t))/4
+  a.i <- diff(t,2)/4
   for(i in 1:N){
     K[i,i] <- 1/{{t[i+1]-t[i]}*{t[i+2]-t[i]}}
     K[i,i+1] <- -1/{{t[i+2]-t[i+1]}*{t[i+1]-t[i]}}
@@ -49,7 +49,8 @@ cvx.pen.reg.default <- function(t, z, lambda, w = NULL, max.iter = 500, alpha.to
   norm = function(a){
     return(sqrt(sum(a^2)))
   }
-  M11 <- p*(K%*%diag(1/q))%*%t(K); M22 <- K%*%z
+  M11 <- p*K%*%(t(K)/q) 
+  M22 <- diff(diff(z)/diff(t))/diff(t,2)
   ba <- a.init
   MM <- Mfun(ba)$M
   bf <- norm({{MM + M11}%*%ba} - M22)
@@ -69,7 +70,7 @@ cvx.pen.reg.default <- function(t, z, lambda, w = NULL, max.iter = 500, alpha.to
           #print(paste('Code Looped at stop criterion value',check))
           #warning('Fixed point iteration started looping.\n And so returning the best value obtained.')
           flag <- 2
-          temp <- as.vector(p*diag(1/q)%*%t(K)%*%ba)
+          temp <- as.vector(p*(t(K)/q)%*%ba)
           temp1 <- t(ba)%*%M22
           zhat <- z - temp
           V <- MF$V
@@ -83,7 +84,7 @@ cvx.pen.reg.default <- function(t, z, lambda, w = NULL, max.iter = 500, alpha.to
         else loop[i/50] <- check
       }
       if(check <= tol){
-        temp <- as.vector(p*diag(1/q)%*%t(K)%*%a1)
+        temp <- as.vector(p*(t(K)/q)%*%a1)
         temp1 <- t(a1)%*%M22
         zhat <- z - temp
         flag <- 0
@@ -98,7 +99,7 @@ cvx.pen.reg.default <- function(t, z, lambda, w = NULL, max.iter = 500, alpha.to
       if(i == sup.iter){
         #warning('sup.iter in convex function estimation reached.')
         flag <- 1
-        temp <- as.vector(p*diag(1/q)%*%t(K)%*%ba)
+        temp <- as.vector(p*(t(K)/q)%*%ba)
         temp1 <- t(ba)%*%M22
         zhat <- z - temp
         V <- MF$V
@@ -162,12 +163,13 @@ plot.cvx.pen.reg <- function(x, ...){
   invisible(list(x = xx, y = yx, fit = fitx))
 }
 
-predict.cvx.pen.reg <- function(object,newdata = NULL,...){
-  t <- object$x.values
-  zhat <- object$fit.values
-  a <- object$alpha
-  D <- object$deriv
-  V <- object$Vmat
+predict.cvx.pen.reg <- function(object, newdata = NULL, ...){
+  t <- unname(object$x.values)
+  zhat <- unname(object$fit.values)
+  a <- unname(object$alpha)
+  D <- unname(object$deriv)
+  V <- unname(object$Vmat)
+  V <- c(t(V))
   n <- length(t)
   if(is.null(newdata)){
     warning("No 'newdata' found and so using input 'x' values")
@@ -175,104 +177,9 @@ predict.cvx.pen.reg <- function(object,newdata = NULL,...){
   } else{
     newdata <- as.vector(newdata)
     r <- length(newdata)
-    foo <- function(kk){
-      if(kk == t[1])
-        return(zhat[1])
-      if(kk < t[1])
-        return(zhat[1] + D[1]*{kk - t[1]})
-      if(kk > t[n])
-        return(zhat[n] + D[n]*{kk - t[n]})
-      if(kk > t[1] & kk <= t[2]){
-        return({a[1]*(a[1] > 0)*{kk - t[1]}^3/{6*{t[2] - t[1]}*{t[3] - t[1]}}} 
-          + D[1]*{kk - t[1]} + zhat[1])
-      }
-      if(kk > t[n-1] & kk <= t[n]){
-        ret <- {a[n-2]*(a[n-2] > 0)*{kk - t[n-1]}*{t[n] - t[n-1]}/{2*{t[n] - t[n-2]}}} + {a[n-2]*(a[n-2] > 0)*{{t[n] - kk}^3 - {t[n] - t[n-1]}^3}/{6*{t[n] - t[n-1]}*{t[n] - t[n-2]}}} + {D[n-1]*{kk - t[n-1]}} + zhat[n-1]
-        return(ret)
-      }
-      for(i in 3:{n-1}){
-        if(kk > t[i-1] & kk <= t[i]){
-          if(kk <= V[i-1,2]){
-            trm1 <- -a[i-2] * {kk - t[i]}^3 / {6*{t[i] - t[i-1]} * {t[i] - t[i-2]}}
-            trm2 <- -a[i-2]*{t[i-1] - t[i]}^2/{6*{t[i] - t[i-2]}}
-            trm3 <- a[i-1]*{kk - t[i-1]}^3/{6*{t[i]-t[i-1]}*{t[i+1] - t[i-1]}}
-            trm4 <- a[i-2]*{kk - t[i-1]}*{t[i] - V[i-1,1]}^2/{2*{t[i] - t[i-1]}*{t[i] - t[i-2]}}
-            trm5 <- -a[i-1]*{kk - t[i-1]}*{V[i-1,1] - t[i-1]}^2/{2*{t[i] - t[i-1]}*{t[i+1] - t[i-1]}}
-            trm6 <- D[i-1]*{kk - t[i-1]}
-            trm7 <- zhat[i-1]
-            ret <- trm1 + trm2 + trm3 + trm4 + trm5 + trm6 + trm7
-            return(ret)
-          }else{
-            kk1 <- V[i-1,2]
-            trm1 <- -a[i-2]*{kk1 - t[i]}^3/{6*{t[i] - t[i-1]}*{t[i] - t[i-2]}}
-            trm2 <- -a[i-2]*{t[i-1] - t[i]}^2/{6*{t[i] - t[i-2]}}
-            trm3 <- a[i-1]*{kk1 - t[i-1]}^3/{6*{t[i]-t[i-1]}*{t[i+1] - t[i-1]}}
-            trm4 <- a[i-2]*{kk1 - t[i-1]}*{t[i] - V[i-1,1]}^2/{2*{t[i] - t[i-1]}*{t[i] - t[i-2]}}
-            trm5 <- -a[i-1]*{kk1 - t[i-1]}*{V[i-1,1] - t[i-1]}^2/{2*{t[i] - t[i-1]}*{t[i+1] - t[i-1]}}
-            trm6 <- D[i-1]*{kk1 - t[i-1]}
-            trm7 <- zhat[i-1]
-            ret <- trm1 + trm2 + trm3 + trm4 + trm5 + trm6 + trm7
-            ret <- ret
-                 + D[i-1]*{kk - kk1}
-                 + {{a[i-2]*{{t[i] - V[i-1,1]}^2 - {t[i] - V[i-1,2]}^2}/{2*{t[i] - t[i-1]}*{t[i] - t[i-2]}}} + {a[i-1]*{{V[i-1,2] - t[i-1]}^2 - {V[i-1,1] - t[i-1]}^2}/{2*{t[i] - t[i-1]}*{t[i+1] - t[i-1]}}}}*{kk - V[i-1,2]}
-            return(ret)
-          }
-        }
-      }
-    }
-    return(as.vector(unlist(sapply(newdata[seq_len(r)],foo,simplify = TRUE,USE.NAMES = FALSE))))
-  }
+    dim <- c(n,r)
+    out <- .C("pred", as.integer(dim), as.double(t), as.double(zhat), as.double(a),
+      as.double(D), as.double(V), as.double(newdata), PACKAGE = "simest")
+    return(out[[7]])
+  }  
 }
-# funest <- function(t,zhat,a,D,V,n){
-#   foo <- function(kk){
-#     if(kk == t[1]){
-#       return(zhat[1])
-#     }
-#     if(kk < t[1]){
-#       ret <- zhat[1] + D[1]*{kk - t[1]}
-#       return(ret)
-#     }
-#     if(kk > t[n]){
-#       ret <- zhat[n] + D[n]*{kk - t[n]}
-#       return(ret)
-#     }
-#     if(kk > t[1] & kk <= t[2]){
-#       ret <- {a[1]*(a[1] > 0)*{kk - t[1]}^3/{6*{t[2] - t[1]}*{t[3] - t[1]}}} + D[1]*{kk - t[1]} + zhat[1]
-#       return(ret)
-#     }
-#     if(kk > t[n-1] & kk <= t[n]){
-#       ret <- {a[n-2]*(a[n-2] > 0)*{kk - t[n-1]}*{t[n] - t[n-1]}/{2*{t[n] - t[n-2]}}} + {a[n-2]*(a[n-2] > 0)*{{t[n] - kk}^3 - {t[n] - t[n-1]}^3}/{6*{t[n] - t[n-1]}*{t[n] - t[n-2]}}} + {D[n-1]*{kk - t[n-1]}} + zhat[n-1]
-#       return(ret)
-#     }
-#     for(i in 3:{n-1}){
-#       if(kk > t[i-1] & kk <= t[i]){
-#         if(kk <= V[i-1,2]){
-#           trm1 <- -a[i-2] * {kk - t[i]}^3 / {6*{t[i] - t[i-1]} * {t[i] - t[i-2]}}
-#           trm2 <- -a[i-2]*{t[i-1] - t[i]}^2/{6*{t[i] - t[i-2]}}
-#           trm3 <- a[i-1]*{kk - t[i-1]}^3/{6*{t[i]-t[i-1]}*{t[i+1] - t[i-1]}}
-#           trm4 <- a[i-2]*{kk - t[i-1]}*{t[i] - V[i-1,1]}^2/{2*{t[i] - t[i-1]}*{t[i] - t[i-2]}}
-#           trm5 <- -a[i-1]*{kk - t[i-1]}*{V[i-1,1] - t[i-1]}^2/{2*{t[i] - t[i-1]}*{t[i+1] - t[i-1]}}
-#           trm6 <- D[i-1]*{kk - t[i-1]}
-#           trm7 <- zhat[i-1]
-#           ret <- trm1 + trm2 + trm3 + trm4 + trm5 + trm6 + trm7
-#           return(ret)
-#         }else{
-#           kk1 <- V[i-1,2]
-#           trm1 <- -a[i-2]*{kk1 - t[i]}^3/{6*{t[i] - t[i-1]}*{t[i] - t[i-2]}}
-#           trm2 <- -a[i-2]*{t[i-1] - t[i]}^2/{6*{t[i] - t[i-2]}}
-#           trm3 <- a[i-1]*{kk1 - t[i-1]}^3/{6*{t[i]-t[i-1]}*{t[i+1] - t[i-1]}}
-#           trm4 <- a[i-2]*{kk1 - t[i-1]}*{t[i] - V[i-1,1]}^2/{2*{t[i] - t[i-1]}*{t[i] - t[i-2]}}
-#           trm5 <- -a[i-1]*{kk1 - t[i-1]}*{V[i-1,1] - t[i-1]}^2/{2*{t[i] - t[i-1]}*{t[i+1] - t[i-1]}}
-#           trm6 <- D[i-1]*{kk1 - t[i-1]}
-#           trm7 <- zhat[i-1]
-#           ret <- trm1 + trm2 + trm3 + trm4 + trm5 + trm6 + trm7
-#           ret <- ret
-#                + D[i-1]*{kk - kk1}
-#                + {{a[i-2]*{{t[i] - V[i-1,1]}^2 - {t[i] - V[i-1,2]}^2}/{2*{t[i] - t[i-1]}*{t[i] - t[i-2]}}} + {a[i-1]*{{V[i-1,2] - t[i-1]}^2 - {V[i-1,1] - t[i-1]}^2}/{2*{t[i] - t[i-1]}*{t[i+1] - t[i-1]}}}}*{kk - V[i-1,2]}
-#           return(ret)
-#         }
-#       }
-#     }
-#   }
-#   return(foo)
-# }

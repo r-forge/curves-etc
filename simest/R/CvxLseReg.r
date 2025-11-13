@@ -11,15 +11,13 @@ cvx.lse.reg.default <- function(t, z, w = NULL, ...){
     if(n <= 2)
       stop("Number of samples must be greater than 2.")
     w <- if (is.null(w)) 
-        rep_len(1, n)/n
+        rep_len(1, n)
       else {
         if (n != length(w)) 
             stop("lengths of 'x' and 'w' must match")
         if (any(w < 0)) 
             stop("all weights should be non-negative")
-        if (all(w == 0)) 
-            stop("some weights should be positive")
-        (w * sum(w > 0))/sum(w)
+        (w * sum(w > 0))
       }
   A <- cbind(t, z, w)  
 	A <- A[order(A[,1]),]
@@ -32,13 +30,19 @@ cvx.lse.reg.default <- function(t, z, w = NULL, ...){
 		A[i,i+1] <- x[i] - x[i+2]
 		A[i,i+2] <- x[i+1] - x[i]
 	}
-	ret <- coneA(y = y, amat = A, w = w, msg = FALSE)
-	fit <- as.vector(ret$thetahat)
-	iter <- ret$steps
+	G <- t(t(A)/sqrt(w))
+	h <- - A%*%y
+	E <- rbind(t(G), t(h))
+	f <- c(rep(0,n),1)
+	tmp <- nnls(E,f)
+	u <- tmp$x
+	r <- as.vector(E%*%u - f)
+	z <- -r[1:n]/r[n+1]
+	fit <- y + z/sqrt(w)
 	deriv <- diff(fit)/diff(x)
 	deriv <- c(deriv, deriv[length(deriv)])
-	ret1 <- list(x.values = x, y.values = y, fit.values = fit, deriv = deriv, iter = iter,
-		residuals = y - fit, minvalue = mean({w*{y-fit}^2}), convergence = 0)
+	ret1 <- list(x.values = x, y.values = y, fit.values = fit, deriv = deriv, iter = 1,
+		residuals = y - fit, minvalue = mean({w*{y-fit}^2}), convergence = tmp$mode)
 	ret1$call <- match.call()
 	class(ret1) <- "cvx.lse.reg" 
 	return(ret1)

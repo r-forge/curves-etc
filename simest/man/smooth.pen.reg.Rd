@@ -32,7 +32,7 @@ smooth.pen.reg(x, y, lambda, w = NULL,...)
 \details{
 The function minimizes 
 \deqn{\sum_{i=1}^n w_i(y_i - f(x_i))^2 + \lambda\int\{f''(x)\}^2dx} 
-without any constraint on \eqn{f}. This function implements in R the algorithm noted in Green and Silverman (1994). The function smooth.spline in R is not suitable for single index model estimation as it chooses \eqn{\lambda} using GCV by default. 
+without any constraint on \eqn{f}. This function implements in R the algorithm noted in Green and Silverman (1994). The function smooth.spline in R is not suitable for single index model estimation as it chooses \eqn{\lambda} using GCV by default. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals.
 }
 \value{
 	An object of class `smooth.pen.reg', basically a list including the elements

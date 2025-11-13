@@ -6,7 +6,7 @@
 
 void Mfun(int dim[], double a[], double t[], double V[], double M[]) {
     int N = dim[0];
-    int Vrow = N + 1, Vcol = 2, Mrow = N, Mcol = N;
+    int Vrow = N + 1, Vcol = 2, Mcol = N;
     float t1 = 0.0, t2 = 0.0, ts = 0.0, tri = 3.0;
     float denom1 = 1.0, denom2 = 1.0, f1num = 0.0, f2num = 0.0;
     float num = 0.0, den = 1.0;
@@ -45,14 +45,14 @@ void Mfun(int dim[], double a[], double t[], double V[], double M[]) {
     		V[i*Vcol + 1] = t[i];
     	}
     }
-    for(int i = 0; i < N; i++){
+    for(int i = N-1; i--;){
     	denom1 = 3*(t[i+2] - t[i])*(t[i+2] - t[i])*(t[i+1] - t[i])*(t[i+1] - t[i]);
     	denom2 = 3*(t[i+2] - t[i])*(t[i+2]-t[i])*(t[i+2] - t[i+1])*(t[i+2] - t[i+1]);
     	f1num = pow(V[i*Vcol + 1] - t[i], tri) - pow(V[i*Vcol] - t[i], tri);
     	f2num = pow(V[(i+1)*Vcol + 1] - t[i+2], tri) - pow(V[(i+1)*Vcol] - t[i+2], tri);
     	M[i*Mcol + i] = (f1num/denom1) + (f2num/denom2);
     }
-    for(int i = 0; i < N-1; i++){
+    for(int i = N-2; i--; ){
     	den = -(t[i+2] - t[i])*(t[i+3] - t[i+1])*(t[i+2] - t[i+1])*(t[i+2] - t[i+1]);
     	num = (pow(V[(i+1)*Vcol + 1], tri) - pow(V[(i+1)*Vcol], tri))/3
     		- (t[i+1] + t[i+2])*(pow(V[(i+1)*Vcol + 1], 2.0) - pow(V[(i+1)*Vcol], 2.0))/2

@@ -35,7 +35,7 @@ The function minimizes
 \deqn{\sum_{i=1}^n w_i(y_i - \theta_i)^2} 
 subject to
 \deqn{-L\le\frac{\theta_2 - \theta_1}{x_2 - x_1}\le\cdots\le\frac{\theta_n - \theta_{n-1}}{x_n - x_{n-1}}\le L}
-for sorted \eqn{x} values and \eqn{y} reorganized such that \eqn{y_i} corresponds to the new sorted \eqn{x_i}. This function uses the \code{nnls} function from the \code{nnls} package to perform the constrained minimization of least squares.
+for sorted \eqn{x} values and \eqn{y} reorganized such that \eqn{y_i} corresponds to the new sorted \eqn{x_i}. This function uses the \code{nnls} function from the \code{nnls} package to perform the constrained minimization of least squares. \code{plot} function provides the scatterplot along with fitted curve; it also includes some diagnostic plots for residuals.
 }
 \value{
 	An object of class `cvx.lip.reg', basically a list including the elements

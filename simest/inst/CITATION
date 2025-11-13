@@ -7,13 +7,14 @@ note <- sprintf("R package version %s", meta$Version)
 
 citEntry(entry = "Manual",
   title        = "{simest}: Single Index Model Estimation with Constraints on Link Function",
-  author       = personList(as.person("Arun Kumar Kuchibhotla")),
+  author       = personList(as.person("Arun Kumar Kuchibhotla"),
+  					as.person("Rohit Kumar Patra")),
   year         = year,
   note         = note,
   url          = "http://CRAN.R-project.org/package=simest",
 
   textVersion  =
-  paste("Arun Kumar Kuchibhotla",
+  paste("Arun Kumar Kuchibhotla and Rohit Kumar Patra",
         sprintf("(%s).", year),   
         "simest: Single Index Model Estimation with Constraints on Link Function",
         paste(note, ".", sep = ""),

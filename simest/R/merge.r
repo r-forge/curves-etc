@@ -2,7 +2,7 @@ fastmerge <- function(DataMat, w = NULL, tol = 1e-04){
 	DataMat <- as.matrix(DataMat)
 	p <- ncol(DataMat)
 	x <- DataMat[,1]
-	DataMat <- DataMat[order(x),]	
+	DataMat <- DataMat[order(x),]
 	n <- length(x)
 	if(is.null(w)){ w <- rep(1,n) }
 	xx <- round({x - mean(x)}/tol)
@@ -26,6 +26,7 @@ fastmerge <- function(DataMat, w = NULL, tol = 1e-04){
 				ncol = p+1, byrow = TRUE
 			   )
 	}
+	tmp <- tmp[order(tmp[,2L]),]
 	w <- tmp[, 1L]
 	DataMat <- tmp[, -1L]
 	return(list(DataMat = DataMat, w = w))

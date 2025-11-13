@@ -35,16 +35,18 @@ cvx.lip.reg.default <- function(t, z, w = NULL, L, ...){
   }
   A[n,] <- c(rep(0,n-2),1,-1)
   b <- c(-L*(x[2]- x[1]), rep(0,n-2),-L*(x[n] - x[n-1]))
-  G <- t(sqrt(w)*t(A))
+  G <- t(t(A)/sqrt(w))
   h <- b - A%*%y
   E <- rbind(t(G), t(h))
   f <- c(rep(0,n),1)
   tmp <- nnls(E, f)
   tt <- tmp$x
+  # print(tt)
   r <- E%*%tt - f
   tt1 <- r[length(r)]
   tt <- -r[-length(r)]/tt1
   fit <- tt/sqrt(w) + y
+  # print(A%*%fit - b)
   deriv <- diff(fit)/diff(x)
   deriv <- c(deriv, deriv[length(deriv)])
   ret1 <- list(x.values = x, y.values = y, fit.values = fit, iter = 1, deriv = deriv,

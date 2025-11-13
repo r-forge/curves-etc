@@ -1,9 +1,8 @@
 useDynLib(simest, .registration = TRUE)
 exportPattern(".")
 importFrom(nnls, nnls)
-importFrom(coneproj, coneA)
 importFrom("graphics", "abline", "lines", "par", "plot", "plot.window")
-importFrom("stats", "splinefun", "predict", "qqline", "qqnorm", "runif")
+importFrom("stats", "splinefun", "predict", "qqline", "qqnorm", "runif", "na.omit")
 
 S3method(print, cvx.pen.reg)
 S3method(print, cvx.lip.reg)
