@@ -1,8 +1,6 @@
 \name{penta}
 \alias{penta}
-\title{
-C code for solving pentadiagonal linear equations.
-}
+\title{C code for solving pentadiagonal linear equations}
 \description{
 This function is only intended for an internal use.
 }

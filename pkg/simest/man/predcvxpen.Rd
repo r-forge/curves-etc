@@ -1,8 +1,6 @@
 \name{predcvxpen}
 \alias{predcvxpen}
-\title{
-C code for prediction using cvx.lse.reg, cvx.lip.reg and cvx.lse.con.reg for function and its derivatives.
-}
+\title{C code for prediction of cvx.lse.reg, cvx.lip.reg and cvx.lse.con.reg, function and derivatives}
 \description{
 This function is only intended for an internal use.
 }
@@ -32,6 +30,6 @@ The estimate is characterized by a fixed point equation which gives the algorith
 Does not return anything. Changes the inputs according to the algorithm.
 }
 
-\author{Arun Kumar Kuchibhotla, arunku@wharton.upenn.edu.}
+\author{Arun Kumar Kuchibhotla}
 
 \keyword{Convex Penalized Least Squares Prediction}

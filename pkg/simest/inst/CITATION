@@ -1,22 +1,32 @@
-citHeader("To cite simest in publications use:")
+## R package reference generated from DESCRIPTION metadata
+citation(auto = meta)
 
-## R >= 2.8.0 passes package metadata to citation().
-if(!exists("meta") || is.null(meta)) meta <- packageDescription("simest")
+if(FALSE) {
+
+PKG <- "simest"
+
+citHeader(paste("To cite the R package ",PKG," in publications use:"))
+
+meta <- packageDescription(PKG)
+stopifnot(meta$Package == PKG)
+authR <- eval(parse(text = meta$`Authors@R`, keep.source = FALSE))
+## and keep only "aut" and "cre" (but not "ctb" etc) authors:
+authR <- authR[vapply(authR$role, \(rls) any(rls %in% c("aut","cre")), NA)]
 year <- sub("-.*", "", meta$Date)
 note <- sprintf("R package version %s", meta$Version)
+url <- paste0("https://CRAN.R-project.org/package=", PKG)
 
-citEntry(entry = "Manual",
-  title        = "{simest}: Single Index Model Estimation with Constraints on Link Function",
-  author       = personList(as.person("Arun Kumar Kuchibhotla"),
-  					as.person("Rohit Kumar Patra")),
+bibe <-  # for debugging
+bibentry(bibtype = "Manual",
+  title        = sprintf("{%s}: %s", PKG,  meta$Title),
+  author       = authR,
   year         = year,
   note         = note,
-  url          = "https://CRAN.R-project.org/package=simest",
-
+  url          = url,
   textVersion  =
-  paste("Arun Kumar Kuchibhotla and Rohit Kumar Patra",
-        sprintf("(%s).", year),   
-        "simest: Single Index Model Estimation with Constraints on Link Function",
-        paste(note, ".", sep = ""),
-        "URL https://CRAN.R-project.org/package=simest")
-)
+      paste(c(toBibtex(authR)),
+            sprintf("(%s).", year),
+            sprintf("%s: %s", PKG, meta$Title),
+            note, "URL", url))
+
+}

@@ -1,10 +1,8 @@
 \name{spen_egcv}
 \alias{spen_egcv}
-\title{
-C code for smoothing splines with randomized GCV computation.
-}
+\title{C code for smoothing splines with randomized GCV computation}
 \description{
-This function is only intended for an internal use.
+  This function is only intended for an internal use.
 }
 \usage{
 spen_egcv(dim, x, y, w, h, QtyPerm, lambda, m, nforApp,
@@ -34,7 +32,6 @@ Does not return anything. Changes the inputs according to the iterations.
 \seealso{
 smooth.spline
 }
-
 
 \author{Arun Kumar Kuchibhotla, arunku@wharton.upenn.edu.}
 
