@@ -2,17 +2,20 @@ Title: Constrained Single Index Model Estimation
 Type: Package
 Package: simest
 Version: 0.4-1
-Authors@R: c(
- 	   person(c("Arun", "Kumar"), "Kuchibhotla", role = "aut", email = "arunku@wharton.upenn.edu")
-         , person(c("Rohit", "Kumar"), "Patra", role = "aut", email = "rohit@stat.columbia.edu")
-         , person("Martin", "Maechler", role = c("ctb", "cre"), email = "maechler@stat.math.ethz.ch",
-	             comment = c("fix *.Rd, etc to get back on CRAN", ORCID = "0000-0002-8685-9910"))
+Authors@R: c(person(c("Arun", "Kumar"), "Kuchibhotla", role = "aut", email = "arunku@wharton.upenn.edu")
+           , person(c("Rohit", "Kumar"), "Patra", role = "aut", email = "rohit@stat.columbia.edu")
+           , person("Martin", "Maechler", role = c("ctb", "cre"), email = "maechler@stat.math.ethz.ch",
+	            comment = c("fix *.Rd, etc to get back on CRAN", ORCID = "0000-0002-8685-9910"))
 	    )
-MaintainerNote: really Arun Kumar Kuchibhotla <arunku@wharton.upenn.edu>
 Date: 2025-11-14
 Imports: nnls, cobs, stats, graphics
 Description: Estimation of function and index vector in single index model ('sim') with
 	     and without shape constraints including different smoothness conditions.
 License: GPL-2
+BugReports: https://r-forge.r-project.org/tracker/?group_id=846
+URL: https://curves-etc.r-forge.r-project.org/,
+     https://r-forge.r-project.org/R/?group_id=846,
+     https://r-forge.r-project.org/scm/viewvc.php/pkg/simest/?root=curves-etc,
+     svn://svn.r-forge.r-project.org/svnroot/curves-etc/pkg/simest
 LazyLoad: yes
 NeedsCompilation: yes

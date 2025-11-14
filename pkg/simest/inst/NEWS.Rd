@@ -15,11 +15,6 @@
   }
   \subsection{Bug Fixes}{
     \itemize{
-      %%________________ TODO!  is NOT YET fixed! __________
-      \item in the case of \sQuote{merging}, in that case in \code{\link[cobs]{conreg}()},
-      the new  (reduced and re-weighted) \code{x} must be used, not the
-      original sorted input \code{x}.
-
       \item in \code{sim.est()} and \code{simestgcv()}, \code{A[,-c(1,2)]}
       needed to get a \code{ , drop=FALSE } in order to work correctly for
       e.g., \code{n = 6}.
@@ -27,6 +22,10 @@
   }
   \subsection{Misc}{
     \itemize{
+      \item Added \pkg{simest} to R-forge, notably \I{Martin Maechler}'s
+      \file{curves-etc} project; also adding a \code{BugReports: } entry to
+      \file{DESCRIPTION}.
+
       \item Using \code{match.arg(methods)} and \code{switch(method, ..)} is
 	more efficient and more readable code.
 
