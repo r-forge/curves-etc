@@ -2,7 +2,8 @@ Title: Constrained Single Index Model Estimation
 Type: Package
 Package: simest
 Version: 0.4-1
-Authors@R: c(person(c("Arun", "Kumar"), "Kuchibhotla", role = "aut", email = "arunku@wharton.upenn.edu")
+Authors@R: c(person(c("Arun", "Kumar"), "Kuchibhotla", role = "aut", email = "arunku@stat.cmu.edu",
+             comment = c(ORCID = "0000-0003-4459-5352"))
            , person(c("Rohit", "Kumar"), "Patra", role = "aut", email = "rohit@stat.columbia.edu")
            , person("Martin", "Maechler", role = c("ctb", "cre"), email = "maechler@stat.math.ethz.ch",
 	            comment = c("fix *.Rd, etc to get back on CRAN", ORCID = "0000-0002-8685-9910"))

@@ -3,7 +3,7 @@
 \name{NEWS}
 \title{News for \R Package \pkg{simest}}% MM: look into ../svn-log-from.all
 
-\section{Changes in version 0.4-1 (2025-11-08)}{
+\section{Changes in version 0.4-1 (2025-11-14)}{
   \subsection{New Features}{
     \itemize{
       \item Improved flexibility \emph{and} informativeness for several
